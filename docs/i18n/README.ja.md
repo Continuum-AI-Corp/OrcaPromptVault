@@ -38,7 +38,7 @@
 
 ## 中身
 
-| ディレクトリ | 収録物 | 件数 | 🐋 取得 |
+| ディレクトリ | 収録物 | 件数 | 取得 |
 |---|---|---|---|
 | [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas、[Codex](../../OpenAI/Codex/) CLI · cloud · desktop、ChatKit Studio | 21 | 5 |
 | [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · ユーザースタイル、[Claude Code](../../Anthropic/Claude-Code/) CLI と Agent SDK | 22 | 8 |
@@ -52,7 +52,7 @@
 | [Meta](../../Meta/) | Meta AI（Muse Spark）· WhatsApp の Llama 4 | 2 | — |
 | [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
 
-🐋 このうち 31 ファイルは、自分たちのマシンで通信そのものから取得したものです（20 回の取得）。サイズ、
+このうち 31 ファイルは、自分たちのマシンで通信そのものから取得したものです（20 回の取得）。サイズ、
 ハーネスのバージョン、各件を再生成するコマンドは **[docs/CAPTURES.md](../CAPTURES.md)** に。残る 75
 ファイルは CL4R1T4S からそのまま引き継いだもので、パスの対照表が
 **[docs/UPSTREAM.md](../UPSTREAM.md)** にあります。

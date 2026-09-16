@@ -1,10 +1,12 @@
 # Claude Code
 
-🐋 **Eight of the nine files here are [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)
+[![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../../docs/CAPTURES.md)
+
+**Eight of the nine files here are [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)
 captures** — the prompt Claude Code actually put on the wire from a terminal on our own machine,
 with the tool schema that travelled with it.
 
-| model | mode | chars | tools | 🐋 files |
+| model | mode | chars | tools | files |
 |---|---|---|---|---|
 | `claude-opus-5` | interactive | 22,950 | 35 | [prompt](claude-code-opus-5-system-prompt-2026-09-03.md) · [tools](claude-code-opus-5-tools.json) |
 | `claude-fable-5-1` | interactive | 26,131 | 35 | [prompt](claude-code-fable-5.1-system-prompt-2026-09-02.md) · [tools](claude-code-fable-5.1-tools.json) |

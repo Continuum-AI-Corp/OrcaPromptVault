@@ -1,6 +1,8 @@
 # Cursor
 
-🐋 **One of the four files here is an [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)
+[![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../docs/CAPTURES.md)
+
+**One of the four files here is an [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)
 capture**: [`cursor-grok-4.5-high-system-prompt-2026-09-03.md`](cursor-grok-4.5-high-system-prompt-2026-09-03.md),
 1,955 characters, taken 2026-09-03.
 

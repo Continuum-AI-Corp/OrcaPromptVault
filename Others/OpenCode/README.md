@@ -1,9 +1,11 @@
 # OpenCode
 
-🐋 **Every file here is an [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) capture** —
+[![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../../docs/CAPTURES.md)
+
+**Every file here is an [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) capture** —
 one harness, seven models, captured across 2026-09-02 and 09-03.
 
-| model | chars | tools | 🐋 prompt |
+| model | chars | tools | prompt |
 |---|---|---|---|
 | `big-pickle` | 9,622 | 11 | [prompt](opencode-big-pickle-system-prompt-2026-09-02.md) |
 | `ling-3.0-flash-fin-free` | 9,648 | 11 | [prompt](opencode-ling-3.0-flash-fin-free-system-prompt-2026-09-02.md) |

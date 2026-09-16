@@ -39,7 +39,7 @@
 
 ## ماذا يضم
 
-| المجلد | المحتوى | الملفات | 🐋 ملتقَط |
+| المجلد | المحتوى | الملفات | ملتقَط |
 |---|---|---|---|
 | [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas، و[Codex](../../OpenAI/Codex/) CLI · cloud · desktop، وChatKit Studio | 21 | 5 |
 | [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) من Sonnet 3.5 إلى Opus 5 · Fable 5.1 · Design · أنماط المستخدم، و[Claude Code](../../Anthropic/Claude-Code/) بواجهة CLI وAgent SDK | 22 | 8 |
@@ -53,7 +53,7 @@
 | [Meta](../../Meta/) | Meta AI على Muse Spark · Llama 4 داخل WhatsApp | 2 | — |
 | [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
 
-🐋 واحد وثلاثون من هذه الملفات أُخذت من الشبكة مباشرة على أجهزتنا — عشرون عملية التقاط، بأحجامها
+واحد وثلاثون من هذه الملفات أُخذت من الشبكة مباشرة على أجهزتنا — عشرون عملية التقاط، بأحجامها
 وإصدارات أطر تشغيلها والأمر الذي يعيد إنتاج كل واحدة، في **[docs/CAPTURES.md](../CAPTURES.md)**.
 أما الخمسة والسبعون الأخرى فموروثة من CL4R1T4S دون أي تعديل، ومفهرسة مسارًا بمسار في
 **[docs/UPSTREAM.md](../UPSTREAM.md)**.

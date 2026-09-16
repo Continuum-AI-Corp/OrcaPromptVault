@@ -1,6 +1,8 @@
 # Kilo Code
 
-🐋 **The file here is an [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) capture**:
+[![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../../docs/CAPTURES.md)
+
+**The file here is an [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) capture**:
 [`kilo-auto-free-system-prompt-2026-09-05.md`](kilo-auto-free-system-prompt-2026-09-05.md), 11,322
 characters and 13 tools, taken 2026-09-05 on the free tier.
 

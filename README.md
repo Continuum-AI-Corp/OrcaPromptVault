@@ -37,7 +37,7 @@ behaviour stops being folklore: you can point at the line that changed.
 
 ## What's inside
 
-| folder | what's in it | artifacts | 🐋 captured |
+| folder | what's in it | artifacts | captured |
 |---|---|---|---|
 | [OpenAI](OpenAI/) | [ChatGPT](OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](OpenAI/Codex/) CLI · cloud · desktop, ChatKit Studio | 21 | 5 |
 | [Anthropic](Anthropic/) | [Claude](Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · user styles, [Claude Code](Anthropic/Claude-Code/) CLI + Agent SDK | 22 | 8 |
@@ -51,7 +51,7 @@ behaviour stops being folklore: you can point at the line that changed.
 | [Meta](Meta/) | Meta AI on Muse Spark · Llama 4 in WhatsApp | 2 | — |
 | [Others](Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
 
-🐋 Thirty-one of these files are captures taken off the wire on our own machines — twenty runs, listed
+Thirty-one of these files are captures taken off the wire on our own machines — twenty runs, listed
 with their sizes, harness versions and the command that reproduces each one in
 **[docs/CAPTURES.md](docs/CAPTURES.md)**. The other seventy-five are inherited from CL4R1T4S,
 unedited, and indexed path by path in **[docs/UPSTREAM.md](docs/UPSTREAM.md)**.

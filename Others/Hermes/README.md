@@ -1,6 +1,8 @@
 # Hermes
 
-🐋 **Both files here are [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) captures**,
+[![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../../docs/CAPTURES.md)
+
+**Both files here are [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) captures**,
 taken 2026-09-04: [the prompt](hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md),
 14,049 characters, and [its 19 tools](hermes-nemotron-3.5-lightning-free-tools.json).
 

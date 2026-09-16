@@ -1,9 +1,11 @@
 # Codex
 
-🐋 **Five of the eleven files here are [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)
+[![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../../docs/CAPTURES.md)
+
+**Five of the eleven files here are [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)
 captures**, taken from `codex exec` on our own machine.
 
-| model | mode | chars | tools | 🐋 files |
+| model | mode | chars | tools | files |
 |---|---|---|---|---|
 | `gpt-5.6-sol` | `codex exec` | 23,354 | 9 | [prompt](codex-cli-gpt-5.6-sol-system-prompt-2026-09-03.md) · [tools](codex-cli-gpt-5.6-sol-tools.json) |
 | `gpt-5.6-luna` | `codex exec` | 20,815 | 3 | [prompt](codex-cli-gpt-5.6-luna-system-prompt-2026-09-02.md) · [tools](codex-cli-gpt-5.6-luna-tools.json) |

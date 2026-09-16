@@ -36,7 +36,7 @@ GPT、Gemini、Grok、DeepSeek、Qwen 等等。
 
 ## 仓库内容
 
-| 目录 | 收录了什么 | 文件数 | 🐋 抓取 |
+| 目录 | 收录了什么 | 文件数 | 抓取 |
 |---|---|---|---|
 | [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas，[Codex](../../OpenAI/Codex/) CLI · cloud · desktop，ChatKit Studio | 21 | 5 |
 | [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · 用户风格，[Claude Code](../../Anthropic/Claude-Code/) CLI 与 Agent SDK | 22 | 8 |
@@ -50,7 +50,7 @@ GPT、Gemini、Grok、DeepSeek、Qwen 等等。
 | [Meta](../../Meta/) | Meta AI（Muse Spark）· WhatsApp 里的 Llama 4 | 2 | — |
 | [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
 
-🐋 其中 31 份是我们自己在本机从网络流量里抓下来的——共二十次抓取，体积、harness 版本，以及能把每一份重新
+其中 31 份是我们自己在本机从网络流量里抓下来的——共二十次抓取，体积、harness 版本，以及能把每一份重新
 生成出来的那条命令，都列在 **[docs/CAPTURES.md](../CAPTURES.md)**。另外 75 份原样继承自 CL4R1T4S，
 逐条路径对照见 **[docs/UPSTREAM.md](../UPSTREAM.md)**。
 

@@ -40,7 +40,7 @@ geändert hat.
 
 ## Was drin ist
 
-| Ordner | Inhalt | Dateien | 🐋 erfasst |
+| Ordner | Inhalt | Dateien | erfasst |
 |---|---|---|---|
 | [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../OpenAI/Codex/) CLI · Cloud · Desktop, ChatKit Studio | 21 | 5 |
 | [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · User Styles, [Claude Code](../../Anthropic/Claude-Code/) CLI und Agent SDK | 22 | 8 |
@@ -54,7 +54,7 @@ geändert hat.
 | [Meta](../../Meta/) | Meta AI auf Muse Spark · Llama 4 in WhatsApp | 2 | — |
 | [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
 
-🐋 Einunddreißig dieser Dateien stammen direkt aus der Leitung, auf unseren eigenen Rechnern — zwanzig
+Einunddreißig dieser Dateien stammen direkt aus der Leitung, auf unseren eigenen Rechnern — zwanzig
 Aufzeichnungen, mit Größen, Harness-Versionen und dem Befehl, der jede reproduziert, in
 **[docs/CAPTURES.md](../CAPTURES.md)**. Die anderen fünfundsiebzig sind unverändert aus CL4R1T4S
 übernommen und Pfad für Pfad in **[docs/UPSTREAM.md](../UPSTREAM.md)** verzeichnet.

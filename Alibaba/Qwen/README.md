@@ -1,6 +1,8 @@
 # Qwen Code
 
-🐋 **Both files here are [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) captures**:
+[![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../../docs/CAPTURES.md)
+
+**Both files here are [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) captures**:
 [the prompt](qwen-code-gpt-5.6-sol-system-prompt-2026-09-03.md) Qwen Code sent on 2026-09-03 —
 28,266 characters — and [the 23 tool definitions](qwen-code-gpt-5.6-sol-tools.json) that went with
 it.

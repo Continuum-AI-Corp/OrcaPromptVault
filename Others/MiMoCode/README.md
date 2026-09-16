@@ -1,6 +1,8 @@
 # MiMoCode
 
-🐋 **Both files here are [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) captures**,
+[![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../../docs/CAPTURES.md)
+
+**Both files here are [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) captures**,
 taken 2026-09-04: [the prompt](mimocode-mimo-v2.5-system-prompt-2026-09-04.md), 50,400 characters —
 the longest CLI prompt in this archive — and [its 16 tools](mimocode-mimo-v2.5-tools.json).
 
