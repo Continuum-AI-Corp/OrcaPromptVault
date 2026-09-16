@@ -38,21 +38,21 @@ cambio de comportamiento en una línea que se puede señalar.
 
 ## Qué hay dentro
 
-| carpeta | contenido | archivos |
-|---|---|---|
-| [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../OpenAI/Codex/) CLI · cloud · desktop, ChatKit Studio | 21 |
-| [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · estilos de usuario, [Claude Code](../../Anthropic/Claude-Code/) CLI y Agent SDK | 22 |
-| [Google](../../Google/) | [Gemini](../../Google/Gemini/) 2.5 Pro · Diffusion · asistente de Gmail | 3 |
-| [xAI](../../xAI/) | [Grok](../../xAI/Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 |
-| [Cursor](../../Cursor/) | agente de Cursor · Cursor 2.0 · Composer sobre Grok 4.5 | 4 |
-| [Moonshot](../../Moonshot/) | [Kimi](../../Moonshot/Kimi/) K2 · K2 Thinking | 2 |
-| [Alibaba](../../Alibaba/) | [Qwen Code](../../Alibaba/Qwen/) CLI | 2 |
-| [ZAI](../../ZAI/) | [ZCode](../../ZAI/GLM/) prompt · skills · tools | 3 |
-| [DeepSeek](../../DeepSeek/) | todavía nada — [se busca](../../CONTRIBUTING.md#wanted) | 0 |
-| [Meta](../../Meta/) | Meta AI sobre Muse Spark · Llama 4 en WhatsApp | 2 |
-| [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 |
+| carpeta | contenido | archivos | 🐋 capturas |
+|---|---|---|---|
+| [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../OpenAI/Codex/) CLI · cloud · desktop, ChatKit Studio | 21 | 5 |
+| [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · estilos de usuario, [Claude Code](../../Anthropic/Claude-Code/) CLI y Agent SDK | 22 | 8 |
+| [Google](../../Google/) | [Gemini](../../Google/Gemini/) 2.5 Pro · Diffusion · asistente de Gmail | 3 | — |
+| [xAI](../../xAI/) | [Grok](../../xAI/Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
+| [Cursor](../../Cursor/) | agente de Cursor · Cursor 2.0 · Composer sobre Grok 4.5 | 4 | 1 |
+| [Moonshot](../../Moonshot/) | [Kimi](../../Moonshot/Kimi/) K2 · K2 Thinking | 2 | — |
+| [Alibaba](../../Alibaba/) | [Qwen Code](../../Alibaba/Qwen/) CLI | 2 | 2 |
+| [ZAI](../../ZAI/) | [ZCode](../../ZAI/GLM/) prompt · skills · tools | 3 | — |
+| [DeepSeek](../../DeepSeek/) | todavía nada — [se busca](../../CONTRIBUTING.md#wanted) | 0 | — |
+| [Meta](../../Meta/) | Meta AI sobre Muse Spark · Llama 4 en WhatsApp | 2 | — |
+| [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
 
-Treinta y uno de estos archivos salieron del cable en nuestras propias máquinas — veinte capturas,
+🐋 Treinta y uno de estos archivos salieron del cable en nuestras propias máquinas — veinte capturas,
 con tamaños, versiones del arnés y el comando que reproduce cada una en
 **[docs/CAPTURES.md](../CAPTURES.md)**. Los otros setenta y cinco se heredan de CL4R1T4S sin
 retocar, y están indexados ruta por ruta en **[docs/UPSTREAM.md](../UPSTREAM.md)**.

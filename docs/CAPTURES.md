@@ -1,4 +1,4 @@
-# Captured entries
+# 🐋 Captured entries
 
 The files listed here were not copied from anywhere. Each one was pulled off the wire on a real
 machine by [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)'s local proxy while the
