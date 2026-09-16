@@ -38,7 +38,7 @@
 
 ## 中身
 
-| ディレクトリ | 収録物 | 件数 | 取得 |
+| ディレクトリ | 収録物 | 件数 | うち取得 |
 |---|---|---|---|
 | [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas、[Codex](../../OpenAI/Codex/) CLI · cloud · desktop、ChatKit Studio | 21 | 5 |
 | [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · ユーザースタイル、[Claude Code](../../Anthropic/Claude-Code/) CLI と Agent SDK | 22 | 8 |

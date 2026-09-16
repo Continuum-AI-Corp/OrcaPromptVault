@@ -39,7 +39,7 @@
 
 ## ماذا يضم
 
-| المجلد | المحتوى | الملفات | ملتقَط |
+| المجلد | المحتوى | الملفات | منها ملتقَط |
 |---|---|---|---|
 | [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas، و[Codex](../../OpenAI/Codex/) CLI · cloud · desktop، وChatKit Studio | 21 | 5 |
 | [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) من Sonnet 3.5 إلى Opus 5 · Fable 5.1 · Design · أنماط المستخدم، و[Claude Code](../../Anthropic/Claude-Code/) بواجهة CLI وAgent SDK | 22 | 8 |

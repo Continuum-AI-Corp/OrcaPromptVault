@@ -36,7 +36,7 @@ GPT、Gemini、Grok、DeepSeek、Qwen 等等。
 
 ## 仓库内容
 
-| 目录 | 收录了什么 | 文件数 | 抓取 |
+| 目录 | 收录了什么 | 文件数 | 其中抓取 |
 |---|---|---|---|
 | [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas，[Codex](../../OpenAI/Codex/) CLI · cloud · desktop，ChatKit Studio | 21 | 5 |
 | [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · 用户风格，[Claude Code](../../Anthropic/Claude-Code/) CLI 与 Agent SDK | 22 | 8 |

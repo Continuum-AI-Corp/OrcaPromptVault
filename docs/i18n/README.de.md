@@ -40,7 +40,7 @@ geändert hat.
 
 ## Was drin ist
 
-| Ordner | Inhalt | Dateien | erfasst |
+| Ordner | Inhalt | Dateien | davon erfasst |
 |---|---|---|---|
 | [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../OpenAI/Codex/) CLI · Cloud · Desktop, ChatKit Studio | 21 | 5 |
 | [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · User Styles, [Claude Code](../../Anthropic/Claude-Code/) CLI und Agent SDK | 22 | 8 |

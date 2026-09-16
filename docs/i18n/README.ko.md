@@ -38,7 +38,7 @@ GPT, Gemini, Grok, DeepSeek, Qwen까지.
 
 ## 무엇이 들어 있나
 
-| 디렉터리 | 내용 | 개수 | 포착 |
+| 디렉터리 | 내용 | 개수 | 그중 포착 |
 |---|---|---|---|
 | [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../OpenAI/Codex/) CLI · cloud · desktop, ChatKit Studio | 21 | 5 |
 | [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · 사용자 스타일, [Claude Code](../../Anthropic/Claude-Code/) CLI와 Agent SDK | 22 | 8 |

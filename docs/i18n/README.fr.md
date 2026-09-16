@@ -38,7 +38,7 @@ transformer un changement de comportement en une ligne qu'on peut montrer du doi
 
 ## Ce qu'on y trouve
 
-| dossier | contenu | fichiers | captures |
+| dossier | contenu | fichiers | dont captures |
 |---|---|---|---|
 | [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../OpenAI/Codex/) CLI · cloud · desktop, ChatKit Studio | 21 | 5 |
 | [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · styles utilisateur, [Claude Code](../../Anthropic/Claude-Code/) CLI et Agent SDK | 22 | 8 |

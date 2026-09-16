@@ -37,7 +37,7 @@ behaviour stops being folklore: you can point at the line that changed.
 
 ## What's inside
 
-| folder | what's in it | artifacts | captured |
+| folder | what's in it | artifacts | of which captured |
 |---|---|---|---|
 | [OpenAI](OpenAI/) | [ChatGPT](OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](OpenAI/Codex/) CLI · cloud · desktop, ChatKit Studio | 21 | 5 |
 | [Anthropic](Anthropic/) | [Claude](Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · user styles, [Claude Code](Anthropic/Claude-Code/) CLI + Agent SDK | 22 | 8 |
