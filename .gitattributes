@@ -1,0 +1,9 @@
+# A prompt in here is evidence. Its size in characters, its diff against the previous capture and
+# any hash taken over it are all byte-level facts, and Git's newline conversion rewrites those
+# bytes on a Windows checkout. Normalise to LF in the index and check out LF everywhere, so a
+# clone on any platform holds the same bytes the harness sent.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.svg text eol=lf
