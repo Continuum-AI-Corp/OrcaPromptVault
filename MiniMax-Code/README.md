@@ -37,17 +37,39 @@ capture deliberately used none.
 
 ## Regenerate
 
-There is no `capture.mjs` profile for this harness yet, so it is not a one-liner. The route, which
-is worth knowing before trying the obvious one:
+One line per prompt mode, against `@minimax-ai/code` 0.4.12:
 
-- **Interception does not work here.** MCode's HTTP client is Node's `fetch`, which ignores
-  `HTTP_PROXY`, so `--tls-intercept` records nothing and reports `capture.empty`.
-- The provider's base URL lives in `~/.minimax/config.yaml`, not in an environment variable. Point
-  it at orca's proxy for the run and put it back afterwards.
+```sh
+node capture/capture.mjs mcode --model deepseek/deepseek-v4-flash-free --prompt-mode tui --allow-failed
+node capture/capture.mjs mcode --model deepseek/deepseek-v4-flash-free --prompt-mode coding --allow-failed
+node capture/capture.mjs mcode --model deepseek/deepseek-v4-flash-free --prompt-mode work --allow-failed
+```
+
+Two flags earn their place. `--prompt-mode` picks between three different prompts the one binary
+sends, and `--allow-failed` keeps the capture when the turn comes back `401` — which it will,
+because the key orca writes into the generated config is a placeholder and the prompt is captured
+regardless, travelling in the request.
+
+Run it from a directory that is a git repository and has no MCP config. The first matters because
+the harness is told whether it is in one, and these captures say it is; the second because orca
+rewrites an MCP config it finds so that traffic is captured too, which adds those servers' tools to
+the harness's tool list. Capturing from orca's own repository put six `mcp__orcareplay__*` entries
+into the tool set — 24 instead of 18 — while leaving the prompt itself byte-identical, since MCode
+does not enumerate its tools there.
+
+The route behind the one-liner, which is worth knowing before trying the obvious one:
+
+- **Interception does not work here.** MCode's HTTP client is Node's `fetch`, which consults
+  neither `HTTP_PROXY` nor `HTTPS_PROXY`, so `--tls-intercept` records nothing and reports
+  `capture.empty`.
+- The provider's base URL lives in `~/.minimax/config.yaml`, not in an environment variable. The
+  `mcode` adapter points `MINIMAX_DATA_DIR` at a directory inside the run and writes a redirected
+  copy of that config there, rather than editing the operator's file and putting it back — MCode
+  rewrites its own config on startup, and a run that is killed never restores anything.
 - `provider add --use` cannot activate a provider headlessly — that path throws `TEST_REQUIRED`
-  unconditionally. Set `defaultModel` to `<providerId>/<modelId>` instead, where the provider id
-  starts with `custom_provider:`.
-- No account and no key are needed: the prompt travels in the request, and orca records it before
-  the origin answers `401`.
+  unconditionally. `defaultModel` set to `<providerId>/<modelId>` activates it instead, where the
+  provider id starts with `custom_provider:`.
+- No account and no key are needed, and only a custom provider can be captured at all: MCode
+  restores the built-in providers' origins over whatever the config says.
 
 Details in [docs/CAPTURES.md](../docs/CAPTURES.md).
