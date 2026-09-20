@@ -42,14 +42,14 @@ geändert hat.
 
 | Ordner | Inhalt | Dateien | davon erfasst |
 |---|---|---|---|
-| [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../OpenAI/Codex/) CLI · Cloud · Desktop, ChatKit Studio | 21 | 5 |
-| [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · User Styles, [Claude Code](../../Anthropic/Claude-Code/) CLI und Agent SDK | 22 | 8 |
-| [Google](../../Google/) | [Gemini](../../Google/Gemini/) 2.5 Pro · Diffusion · Gmail-Assistent | 3 | — |
-| [xAI](../../xAI/) | [Grok](../../xAI/Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
+| [OpenAI](../../OpenAI/) | [ChatGPT](../../ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../Codex/) CLI · Cloud · Desktop, ChatKit Studio | 21 | 5 |
+| [Anthropic](../../Anthropic/) | [Claude](../../Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · User Styles, [Claude Code](../../Claude-Code/) CLI und Agent SDK | 22 | 8 |
+| [Google](../../Google/) | [Gemini](../../Gemini/) 2.5 Pro · Diffusion · Gmail-Assistent | 3 | — |
+| [xAI](../../xAI/) | [Grok](../../Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
 | [Cursor](../../Cursor/) | Cursor Agent · Cursor 2.0 · Composer auf Grok 4.5 | 4 | 1 |
-| [Moonshot](../../Moonshot/) | [Kimi](../../Moonshot/Kimi/) K2 · K2 Thinking | 2 | — |
-| [Alibaba](../../Alibaba/) | [Qwen Code](../../Alibaba/Qwen/) CLI | 2 | 2 |
-| [ZAI](../../ZAI/) | [ZCode](../../ZAI/GLM/) Prompt · Skills · Tools | 3 | — |
+| [Moonshot](../../Moonshot/) | [Kimi](../../Kimi/) K2 · K2 Thinking | 2 | — |
+| [Alibaba](../../Alibaba/) | [Qwen Code](../../Qwen/) CLI | 2 | 2 |
+| [ZAI](../../ZAI/) | [ZCode](../../GLM/) Prompt · Skills · Tools | 3 | — |
 | [DeepSeek](../../DeepSeek/) | noch nichts — [gesucht](../../CONTRIBUTING.md#wanted) | 0 | — |
 | [Meta](../../Meta/) | Meta AI auf Muse Spark · Llama 4 in WhatsApp | 2 | — |
 | [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
@@ -98,21 +98,21 @@ werden müssen, weil sich ihr Ziel nicht per Umgebungsvariable verschieben läss
 Vier Befunde, alle an den Dateien in diesem Repository nachprüfbar:
 
 - **Das Harness ist die Variable.** Ein Modell, `nemotron-3.5-lightning-free`, auf zwei Harnesses:
-  [9.656 Zeichen und 11 Tools von OpenCode](../../Others/OpenCode/opencode-nemotron-3.5-lightning-free-system-prompt-2026-09-02.md),
-  [14.049 und 19 von Hermes](../../Others/Hermes/hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md).
+  [9.656 Zeichen und 11 Tools von OpenCode](../../OpenCode/opencode-nemotron-3.5-lightning-free-system-prompt-2026-09-02.md),
+  [14.049 und 19 von Hermes](../../Hermes/hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md).
   Gleiches Modell, gleicher kostenloser Endpunkt, andere Anweisungen, andere Werkzeugfläche.
-- **Das Modell ebenso.** [OpenCode](../../Others/OpenCode/) schickt über sieben Modelle drei
+- **Das Modell ebenso.** [OpenCode](../../OpenCode/) schickt über sieben Modelle drei
   verschiedene Vorlagen. Fünf kostenlose beginnen mit *You are opencode, an interactive CLI tool*;
   Muse Spark bekommt einen anderen Einstieg und den Responses-Dialekt; GPT-5.6-Sol bekommt eine
   dritte Vorlage und `apply_patch` statt `edit` und `write`. Prompt und Wire-Format werden pro
   Modell gewählt.
 - **Interaktiv ist nicht derselbe Prompt wie `-p`.** Claude Code sendet auf Fable 5.1 aus dem
-  Terminal [26.131 Zeichen und 35 Tools](../../Anthropic/Claude-Code/claude-code-fable-5.1-system-prompt-2026-09-02.md)
-  und aus einem Skript [20.806 und 29](../../Anthropic/Claude-Code/claude-code-fable-5.1-print-system-prompt-2026-09-02.md),
+  Terminal [26.131 Zeichen und 35 Tools](../../Claude-Code/claude-code-fable-5.1-system-prompt-2026-09-02.md)
+  und aus einem Skript [20.806 und 29](../../Claude-Code/claude-code-fable-5.1-print-system-prompt-2026-09-02.md),
   wobei sich schon die Identitätszeile zu *You are a Claude agent, built on Anthropic's Claude Agent
   SDK* ändert. Der Prompt des Alltags und der, den der CI-Job bekommt, sind zwei Prompts.
 - **Eine Stufe ist kein Prompt.** MiMoCode sendet für `mimo-v2.5` und `mimo-v2.5-pro`
-  [byte-identischen Text und identische Tools](../../Others/MiMoCode/mimocode-mimo-v2.5-system-prompt-2026-09-04.md).
+  [byte-identischen Text und identische Tools](../../MiMoCode/mimocode-mimo-v2.5-system-prompt-2026-09-04.md).
   Die Stufe ändert das Modell hinter der Anfrage und nichts an der Anfrage. Und
   [Cursors System-Prompt](../../Cursor/cursor-grok-4.5-high-system-prompt-2026-09-03.md) hat 1.955
   Zeichen — serverseitig zusammengesetzt und in der *Antwort* zurückgeschickt, während weitere

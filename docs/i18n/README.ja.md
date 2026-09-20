@@ -40,14 +40,14 @@
 
 | ディレクトリ | 収録物 | 件数 | うち取得 |
 |---|---|---|---|
-| [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas、[Codex](../../OpenAI/Codex/) CLI · cloud · desktop、ChatKit Studio | 21 | 5 |
-| [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · ユーザースタイル、[Claude Code](../../Anthropic/Claude-Code/) CLI と Agent SDK | 22 | 8 |
-| [Google](../../Google/) | [Gemini](../../Google/Gemini/) 2.5 Pro · Diffusion · Gmail アシスタント | 3 | — |
-| [xAI](../../xAI/) | [Grok](../../xAI/Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
+| [OpenAI](../../OpenAI/) | [ChatGPT](../../ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas、[Codex](../../Codex/) CLI · cloud · desktop、ChatKit Studio | 21 | 5 |
+| [Anthropic](../../Anthropic/) | [Claude](../../Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · ユーザースタイル、[Claude Code](../../Claude-Code/) CLI と Agent SDK | 22 | 8 |
+| [Google](../../Google/) | [Gemini](../../Gemini/) 2.5 Pro · Diffusion · Gmail アシスタント | 3 | — |
+| [xAI](../../xAI/) | [Grok](../../Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
 | [Cursor](../../Cursor/) | Cursor agent · Cursor 2.0 · Grok 4.5 上の Composer | 4 | 1 |
-| [Moonshot](../../Moonshot/) | [Kimi](../../Moonshot/Kimi/) K2 · K2 Thinking | 2 | — |
-| [Alibaba](../../Alibaba/) | [Qwen Code](../../Alibaba/Qwen/) CLI | 2 | 2 |
-| [ZAI](../../ZAI/) | [ZCode](../../ZAI/GLM/) プロンプト · skills · tools | 3 | — |
+| [Moonshot](../../Moonshot/) | [Kimi](../../Kimi/) K2 · K2 Thinking | 2 | — |
+| [Alibaba](../../Alibaba/) | [Qwen Code](../../Qwen/) CLI | 2 | 2 |
+| [ZAI](../../ZAI/) | [ZCode](../../GLM/) プロンプト · skills · tools | 3 | — |
 | [DeepSeek](../../DeepSeek/) | まだなし——[募集中](../../CONTRIBUTING.md#wanted) | 0 | — |
 | [Meta](../../Meta/) | Meta AI（Muse Spark）· WhatsApp の Llama 4 | 2 | — |
 | [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
@@ -94,21 +94,21 @@ Codex、OpenCode、Qwen Code、Cursor、MiMoCode、Kilo、Hermes も同じ道筋
 いずれもこのリポジトリのファイルで自分で確かめられます。
 
 - **変数はハーネスのほう。** 同じモデル `nemotron-3.5-lightning-free` を 2 つのハーネスで:
-  [OpenCode は 9,656 文字・11 ツール](../../Others/OpenCode/opencode-nemotron-3.5-lightning-free-system-prompt-2026-09-02.md)、
-  [Hermes は 14,049 文字・19 ツール](../../Others/Hermes/hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md)。
+  [OpenCode は 9,656 文字・11 ツール](../../OpenCode/opencode-nemotron-3.5-lightning-free-system-prompt-2026-09-02.md)、
+  [Hermes は 14,049 文字・19 ツール](../../Hermes/hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md)。
   同じモデル、同じ無料エンドポイント、違う指示、違うツール面。
-- **モデルもまた変数。** [OpenCode](../../Others/OpenCode/) は 7 モデルに 3 種類のテンプレートを送り分
+- **モデルもまた変数。** [OpenCode](../../OpenCode/) は 7 モデルに 3 種類のテンプレートを送り分
   けます。無料モデル 5 つは *You are opencode, an interactive CLI tool* で始まり、Muse Spark は別の書
   き出しで responses 方言、GPT-5.6-Sol は 3 つめのテンプレートで `edit` と `write` の代わりに
   `apply_patch` を持ちます。プロンプトもワイヤ形式もモデルごとに選ばれています。
 - **対話モードと `-p` は別のプロンプト。** Claude Code は Fable 5.1 で、端末からなら
-  [26,131 文字・35 ツール](../../Anthropic/Claude-Code/claude-code-fable-5.1-system-prompt-2026-09-02.md)、
+  [26,131 文字・35 ツール](../../Claude-Code/claude-code-fable-5.1-system-prompt-2026-09-02.md)、
   スクリプトからなら
-  [20,806 文字・29 ツール](../../Anthropic/Claude-Code/claude-code-fable-5.1-print-system-prompt-2026-09-02.md)
+  [20,806 文字・29 ツール](../../Claude-Code/claude-code-fable-5.1-print-system-prompt-2026-09-02.md)
   を送り、冒頭の自己紹介まで *You are a Claude agent, built on Anthropic's Claude Agent SDK* に変わり
   ます。日々使うプロンプトと CI が受け取るプロンプトは別物です。
 - **ティアはプロンプトを変えない。** MiMoCode は `mimo-v2.5` と `mimo-v2.5-pro` に
-  [バイト単位で同一のテキストとツール](../../Others/MiMoCode/mimocode-mimo-v2.5-system-prompt-2026-09-04.md)
+  [バイト単位で同一のテキストとツール](../../MiMoCode/mimocode-mimo-v2.5-system-prompt-2026-09-04.md)
   を送ります。ティアが変えるのはリクエストの先にいるモデルだけです。一方
   [Cursor のシステムプロンプト](../../Cursor/cursor-grok-4.5-high-system-prompt-2026-09-03.md) は
   1,955 文字——サーバー側で組み立てられ、*レスポンス*として返ってきます。環境・ルール・skills・ツール

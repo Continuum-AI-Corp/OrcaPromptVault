@@ -37,21 +37,22 @@ behaviour stops being folklore: you can point at the line that changed.
 
 ## What's inside
 
-| folder | what's in it | artifacts | of which captured |
+| vendor | products | artifacts | of which captured |
 |---|---|---|---|
-| [OpenAI](OpenAI/) | [ChatGPT](OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](OpenAI/Codex/) CLI · cloud · desktop, ChatKit Studio | 21 | 5 |
-| [Anthropic](Anthropic/) | [Claude](Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · user styles, [Claude Code](Anthropic/Claude-Code/) CLI + Agent SDK | 22 | 8 |
-| [Google](Google/) | [Gemini](Google/Gemini/) 2.5 Pro · Diffusion · Gmail assistant | 3 | — |
-| [xAI](xAI/) | [Grok](xAI/Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
-| [Cursor](Cursor/) | Cursor agent · Cursor 2.0 · Composer on Grok 4.5 | 4 | 1 |
-| [Moonshot](Moonshot/) | [Kimi](Moonshot/Kimi/) K2 · K2 Thinking | 2 | — |
-| [Alibaba](Alibaba/) | [Qwen Code](Alibaba/Qwen/) CLI | 2 | 2 |
-| [ZAI](ZAI/) | [ZCode](ZAI/GLM/) prompt · skills · tools | 3 | — |
-| [DeepSeek](DeepSeek/) | nothing yet — [wanted](CONTRIBUTING.md#wanted) | 0 | — |
-| [Meta](Meta/) | Meta AI on Muse Spark · Llama 4 in WhatsApp | 2 | — |
-| [Others](Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
+| OpenAI | [ChatGPT](ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](Codex/) CLI · cloud · desktop, [ChatKit Studio](ChatKit-Studio/) | 21 | 5 |
+| Anthropic | [Claude](Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · user styles, [Claude Code](Claude-Code/) CLI + Agent SDK | 22 | 8 |
+| Google | [Gemini](Gemini/) 2.5 Pro · Diffusion · Gmail assistant | 3 | — |
+| xAI | [Grok](Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
+| Cursor | [Cursor](Cursor/) agent · 2.0 · Composer on Grok 4.5 | 4 | 1 |
+| Moonshot | [Kimi](Kimi/) K2 · K2 Thinking | 2 | — |
+| Alibaba | [Qwen Code](Qwen/) CLI | 2 | 2 |
+| ZAI | [ZCode](GLM/) prompt · skills · tools | 3 | — |
+| DeepSeek | [nothing yet](DeepSeek/) — [wanted](CONTRIBUTING.md#wanted) | 0 | — |
+| Meta | [Meta AI](Meta-AI/) on Muse Spark · Llama 4 in WhatsApp | 2 | — |
+| independent | [OpenCode](OpenCode/) · [Devin](Devin/) · [Windsurf](Windsurf/) · [Cline](Cline/) · [Replit](Replit/) · [Manus](Manus/) · [v0](Vercel-v0/) · [Bolt](Bolt/) · [Lovable](Lovable/) · [Perplexity](Perplexity/) · [Mistral](Mistral/) · [MiniMax](MiniMax/) · [MiMoCode](MiMoCode/) · [Hermes](Hermes/) · [Kilo Code](Kilo-Code/) · [Dia](Dia/) · [Brave Leo](Brave-Leo/) · [Factory Droid](Factory-Droid/) · [Hume](Hume/) · [Cluely](Cluely/) · [Same.dev](Same-Dev/) · [MultiOn](MultiOn/) · [MiniMax Code](MiniMax-Code/) | 44 | 19 |
 
-Thirty-one of these files are captures taken off the wire on our own machines — twenty runs, listed
+Thirty-five of these files are captures taken off the wire on our own machines — twenty-three
+runs, listed
 with their sizes, harness versions and the command that reproduces each one in
 **[docs/CAPTURES.md](docs/CAPTURES.md)**. The other seventy-five are inherited from CL4R1T4S,
 unedited, and indexed path by path in **[docs/UPSTREAM.md](docs/UPSTREAM.md)**.
@@ -94,22 +95,22 @@ their origin cannot be moved with an environment variable.
 Four findings you can check against the files in this repository, without taking anyone's word:
 
 - **The harness is the variable.** One model, `nemotron-3.5-lightning-free`, on two harnesses:
-  [9,656 characters and 11 tools from OpenCode](Others/OpenCode/opencode-nemotron-3.5-lightning-free-system-prompt-2026-09-02.md),
-  [14,049 and 19 from Hermes](Others/Hermes/hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md).
+  [9,656 characters and 11 tools from OpenCode](OpenCode/opencode-nemotron-3.5-lightning-free-system-prompt-2026-09-02.md),
+  [14,049 and 19 from Hermes](Hermes/hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md).
   Same model, same free endpoint, different instructions and a different tool surface.
-- **So is the model.** [OpenCode](Others/OpenCode/) sends three different templates across seven
+- **So is the model.** [OpenCode](OpenCode/) sends three different templates across seven
   models. Five free ones open with *You are opencode, an interactive CLI tool*; Muse Spark gets a
   different opening and the responses dialect; GPT-5.6-Sol gets a third template and `apply_patch`
   in place of `edit` and `write`. The prompt and the wire format are both chosen per model.
 - **Interactive is not the same prompt as `-p`.** Claude Code on Fable 5.1 sends
-  [26,131 characters and 35 tools](Anthropic/Claude-Code/claude-code-fable-5.1-system-prompt-2026-09-02.md)
+  [26,131 characters and 35 tools](Claude-Code/claude-code-fable-5.1-system-prompt-2026-09-02.md)
   from a terminal and
-  [20,806 and 29](Anthropic/Claude-Code/claude-code-fable-5.1-print-system-prompt-2026-09-02.md)
+  [20,806 and 29](Claude-Code/claude-code-fable-5.1-print-system-prompt-2026-09-02.md)
   from a script, where the identity line itself changes to *You are a Claude agent, built on
   Anthropic's Claude Agent SDK*. The prompt behind daily use and the one your CI job gets are two
   different prompts.
 - **A tier is not a prompt.** MiMoCode sends
-  [byte-identical text and tools](Others/MiMoCode/mimocode-mimo-v2.5-system-prompt-2026-09-04.md)
+  [byte-identical text and tools](MiMoCode/mimocode-mimo-v2.5-system-prompt-2026-09-04.md)
   for `mimo-v2.5` and `mimo-v2.5-pro`. The tier changes the model behind the request and nothing
   about the request. And [Cursor's system prompt](Cursor/cursor-grok-4.5-high-system-prompt-2026-09-03.md)
   is 1,955 characters — composed on Cursor's servers and sent *back* in the response, with another
@@ -124,22 +125,22 @@ Orca-PromptVault/
 │   ├── CAPTURES.md          every captured entry + the command that reproduces it
 │   ├── UPSTREAM.md          what came from CL4R1T4S, path by path
 │   └── i18n/                this README in 7 more languages
-├── OpenAI/         ChatGPT/ · Codex/
-├── Anthropic/      Claude/ · Claude-Code/
-├── Google/         Gemini/ · Gemini-CLI/
-├── xAI/            Grok/
-├── Cursor/
-├── Moonshot/       Kimi/
-├── Alibaba/        Qwen/
-├── ZAI/            GLM/
-├── DeepSeek/
-├── Meta/
-└── Others/         one folder per product
+├── ChatGPT/        Codex/ · ChatKit-Studio/          OpenAI
+├── Claude/         Claude-Code/                      Anthropic
+├── Gemini/         Gemini-CLI/                       Google
+├── Grok/                                             xAI
+├── Kimi/ · Qwen/ · GLM/ · Meta-AI/ · DeepSeek/       Moonshot · Alibaba · ZAI · Meta
+├── Cursor/ · Windsurf/ · Cline/ · Kilo-Code/         editors and IDE agents
+├── OpenCode/ · Hermes/ · MiMoCode/ · MiniMax/        terminal agents
+├── Devin/ · Manus/ · Replit/ · Factory-Droid/        autonomous and hosted
+└── …                                                 one folder per product
 ```
 
-Files sit under **whoever ships the prompt**, not whoever trained the model. An NVIDIA model driven
-by OpenCode is filed under OpenCode, because OpenCode wrote those instructions; Meta AI's own
-assistant is filed under Meta, because Meta did. One file per capture, named
+One product, one folder, at the top level. Files sit under **whoever ships the prompt**, not
+whoever trained the model: an NVIDIA model driven by OpenCode is filed under `OpenCode/`, because
+OpenCode wrote those instructions; Meta AI's own assistant is filed under `Meta-AI/`, because Meta
+did. The vendor is a column in the table above, not a directory — a path is for finding one
+product, and nesting it under a lab meant knowing the lab before you could look. One file per capture, named
 `<harness>-<model>-<artifact>-<date>`, so a file pulled out on its own still says where it came
 from.
 

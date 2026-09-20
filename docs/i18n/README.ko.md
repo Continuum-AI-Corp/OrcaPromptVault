@@ -40,14 +40,14 @@ GPT, Gemini, Grok, DeepSeek, Qwen까지.
 
 | 디렉터리 | 내용 | 개수 | 그중 포착 |
 |---|---|---|---|
-| [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../OpenAI/Codex/) CLI · cloud · desktop, ChatKit Studio | 21 | 5 |
-| [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · 사용자 스타일, [Claude Code](../../Anthropic/Claude-Code/) CLI와 Agent SDK | 22 | 8 |
-| [Google](../../Google/) | [Gemini](../../Google/Gemini/) 2.5 Pro · Diffusion · Gmail 어시스턴트 | 3 | — |
-| [xAI](../../xAI/) | [Grok](../../xAI/Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
+| [OpenAI](../../OpenAI/) | [ChatGPT](../../ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../Codex/) CLI · cloud · desktop, ChatKit Studio | 21 | 5 |
+| [Anthropic](../../Anthropic/) | [Claude](../../Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · 사용자 스타일, [Claude Code](../../Claude-Code/) CLI와 Agent SDK | 22 | 8 |
+| [Google](../../Google/) | [Gemini](../../Gemini/) 2.5 Pro · Diffusion · Gmail 어시스턴트 | 3 | — |
+| [xAI](../../xAI/) | [Grok](../../Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
 | [Cursor](../../Cursor/) | Cursor agent · Cursor 2.0 · Grok 4.5 위의 Composer | 4 | 1 |
-| [Moonshot](../../Moonshot/) | [Kimi](../../Moonshot/Kimi/) K2 · K2 Thinking | 2 | — |
-| [Alibaba](../../Alibaba/) | [Qwen Code](../../Alibaba/Qwen/) CLI | 2 | 2 |
-| [ZAI](../../ZAI/) | [ZCode](../../ZAI/GLM/) 프롬프트 · skills · tools | 3 | — |
+| [Moonshot](../../Moonshot/) | [Kimi](../../Kimi/) K2 · K2 Thinking | 2 | — |
+| [Alibaba](../../Alibaba/) | [Qwen Code](../../Qwen/) CLI | 2 | 2 |
+| [ZAI](../../ZAI/) | [ZCode](../../GLM/) 프롬프트 · skills · tools | 3 | — |
 | [DeepSeek](../../DeepSeek/) | 아직 없음 — [모집 중](../../CONTRIBUTING.md#wanted) | 0 | — |
 | [Meta](../../Meta/) | Meta AI(Muse Spark) · WhatsApp의 Llama 4 | 2 | — |
 | [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
@@ -91,21 +91,21 @@ Codex, OpenCode, Qwen Code, Cursor, MiMoCode, Kilo, Hermes도 같은 방식입�
 네 가지 모두 이 저장소의 파일로 직접 확인할 수 있습니다.
 
 - **변수는 하네스 쪽이다.** 같은 모델 `nemotron-3.5-lightning-free`를 두 하네스에서:
-  [OpenCode는 9,656자 · 11개 도구](../../Others/OpenCode/opencode-nemotron-3.5-lightning-free-system-prompt-2026-09-02.md),
-  [Hermes는 14,049자 · 19개 도구](../../Others/Hermes/hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md).
+  [OpenCode는 9,656자 · 11개 도구](../../OpenCode/opencode-nemotron-3.5-lightning-free-system-prompt-2026-09-02.md),
+  [Hermes는 14,049자 · 19개 도구](../../Hermes/hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md).
   같은 모델, 같은 무료 엔드포인트, 다른 지시문과 다른 도구 표면.
-- **모델도 변수다.** [OpenCode](../../Others/OpenCode/)는 일곱 모델에 세 가지 템플릿을 나눠 보냅니다.
+- **모델도 변수다.** [OpenCode](../../OpenCode/)는 일곱 모델에 세 가지 템플릿을 나눠 보냅니다.
   무료 모델 다섯은 *You are opencode, an interactive CLI tool*로 시작하고, Muse Spark는 다른 도입부에
   responses 방언을 쓰며, GPT-5.6-Sol은 세 번째 템플릿에 `edit`과 `write` 대신 `apply_patch`를 받습니다.
   프롬프트도 전송 형식도 모델마다 고릅니다.
 - **대화형과 `-p`는 다른 프롬프트다.** Claude Code는 Fable 5.1에서 터미널이라면
-  [26,131자 · 35개 도구](../../Anthropic/Claude-Code/claude-code-fable-5.1-system-prompt-2026-09-02.md)를,
+  [26,131자 · 35개 도구](../../Claude-Code/claude-code-fable-5.1-system-prompt-2026-09-02.md)를,
   스크립트라면
-  [20,806자 · 29개 도구](../../Anthropic/Claude-Code/claude-code-fable-5.1-print-system-prompt-2026-09-02.md)를
+  [20,806자 · 29개 도구](../../Claude-Code/claude-code-fable-5.1-print-system-prompt-2026-09-02.md)를
   보내며, 자기소개 문장부터 *You are a Claude agent, built on Anthropic's Claude Agent SDK*로 바뀝니다.
   매일 쓰는 프롬프트와 CI가 받는 프롬프트는 서로 다른 프롬프트입니다.
 - **등급은 프롬프트가 아니다.** MiMoCode는 `mimo-v2.5`와 `mimo-v2.5-pro`에
-  [바이트 단위로 동일한 텍스트와 도구](../../Others/MiMoCode/mimocode-mimo-v2.5-system-prompt-2026-09-04.md)를
+  [바이트 단위로 동일한 텍스트와 도구](../../MiMoCode/mimocode-mimo-v2.5-system-prompt-2026-09-04.md)를
   보냅니다. 등급이 바꾸는 것은 요청 뒤의 모델뿐입니다. 한편
   [Cursor의 시스템 프롬프트](../../Cursor/cursor-grok-4.5-high-system-prompt-2026-09-03.md)는 1,955자
   입니다 — 서버에서 조립돼 *응답*으로 돌아오고, 환경·규칙·skills·도구 네임스페이스 약 19 KB는 user 턴

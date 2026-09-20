@@ -11,7 +11,7 @@ them Hermes' own builtins — so the catalogue belongs in the capture, and this 
 prompt.
 
 The same model, `nemotron-3.5-lightning-free`, was also captured under
-[Others/OpenCode](../OpenCode): 9,656 characters and 11 tools there against 14,049 and 19 here.
+[OpenCode](../OpenCode): 9,656 characters and 11 tools there against 14,049 and 19 here.
 Same model, same anonymous endpoint, different instructions and a different tool surface — **the
 harness is the variable**, and this pair is what isolates it.
 
