@@ -38,14 +38,14 @@ GPT、Gemini、Grok、DeepSeek、Qwen 等等。
 
 | 目录 | 收录了什么 | 文件数 | 其中抓取 |
 |---|---|---|---|
-| [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas，[Codex](../../OpenAI/Codex/) CLI · cloud · desktop，ChatKit Studio | 21 | 5 |
-| [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · 用户风格，[Claude Code](../../Anthropic/Claude-Code/) CLI 与 Agent SDK | 22 | 8 |
-| [Google](../../Google/) | [Gemini](../../Google/Gemini/) 2.5 Pro · Diffusion · Gmail 助手 | 3 | — |
-| [xAI](../../xAI/) | [Grok](../../xAI/Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
+| [OpenAI](../../OpenAI/) | [ChatGPT](../../ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas，[Codex](../../Codex/) CLI · cloud · desktop，ChatKit Studio | 21 | 5 |
+| [Anthropic](../../Anthropic/) | [Claude](../../Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · 用户风格，[Claude Code](../../Claude-Code/) CLI 与 Agent SDK | 22 | 8 |
+| [Google](../../Google/) | [Gemini](../../Gemini/) 2.5 Pro · Diffusion · Gmail 助手 | 3 | — |
+| [xAI](../../xAI/) | [Grok](../../Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
 | [Cursor](../../Cursor/) | Cursor agent · Cursor 2.0 · Composer 跑 Grok 4.5 | 4 | 1 |
-| [Moonshot](../../Moonshot/) | [Kimi](../../Moonshot/Kimi/) K2 · K2 Thinking | 2 | — |
-| [Alibaba](../../Alibaba/) | [Qwen Code](../../Alibaba/Qwen/) CLI | 2 | 2 |
-| [ZAI](../../ZAI/) | [ZCode](../../ZAI/GLM/) 提示词 · skills · tools | 3 | — |
+| [Moonshot](../../Moonshot/) | [Kimi](../../Kimi/) K2 · K2 Thinking | 2 | — |
+| [Alibaba](../../Alibaba/) | [Qwen Code](../../Qwen/) CLI | 2 | 2 |
+| [ZAI](../../ZAI/) | [ZCode](../../GLM/) 提示词 · skills · tools | 3 | — |
 | [DeepSeek](../../DeepSeek/) | 暂无——[征集中](../../CONTRIBUTING.md#wanted) | 0 | — |
 | [Meta](../../Meta/) | Meta AI（Muse Spark）· WhatsApp 里的 Llama 4 | 2 | — |
 | [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
@@ -87,21 +87,21 @@ Codex、OpenCode、Qwen Code、Cursor、MiMoCode、Kilo、Hermes 走的是同一
 四个结论，都能对着本仓库的文件自己核，不用信谁的一面之词：
 
 - **harness 才是变量。** 同一个模型 `nemotron-3.5-lightning-free`，跑在两个 harness 上：
-  [OpenCode 给它 9,656 个字符、11 个工具](../../Others/OpenCode/opencode-nemotron-3.5-lightning-free-system-prompt-2026-09-02.md)，
-  [Hermes 给它 14,049 个字符、19 个工具](../../Others/Hermes/hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md)。
+  [OpenCode 给它 9,656 个字符、11 个工具](../../OpenCode/opencode-nemotron-3.5-lightning-free-system-prompt-2026-09-02.md)，
+  [Hermes 给它 14,049 个字符、19 个工具](../../Hermes/hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md)。
   同一个模型、同一个免费 endpoint，指令不同，工具面也不同。
-- **模型同样是变量。** [OpenCode](../../Others/OpenCode/) 在七个模型上发出三套不同的模板。五个免费模
+- **模型同样是变量。** [OpenCode](../../OpenCode/) 在七个模型上发出三套不同的模板。五个免费模
   型收到的是 *You are opencode, an interactive CLI tool*；Muse Spark 收到的是另一套开头，而且走的是
   responses 协议；GPT-5.6-Sol 收到第三套，并且用 `apply_patch` 替掉了 `edit` 和 `write`。提示词和传输
   格式都是按模型挑的。
 - **交互模式和 `-p` 不是同一段提示词。** Claude Code 在 Fable 5.1 上，从终端里发出的是
-  [26,131 个字符、35 个工具](../../Anthropic/Claude-Code/claude-code-fable-5.1-system-prompt-2026-09-02.md)，
+  [26,131 个字符、35 个工具](../../Claude-Code/claude-code-fable-5.1-system-prompt-2026-09-02.md)，
   从脚本里发出的是
-  [20,806 个字符、29 个工具](../../Anthropic/Claude-Code/claude-code-fable-5.1-print-system-prompt-2026-09-02.md)，
+  [20,806 个字符、29 个工具](../../Claude-Code/claude-code-fable-5.1-print-system-prompt-2026-09-02.md)，
   连身份那一句都变成了 *You are a Claude agent, built on Anthropic's Claude Agent SDK*。你天天用的那
   段提示词，和你的 CI 拿到的那段，是两段。
 - **档位不等于提示词。** MiMoCode 对 `mimo-v2.5` 和 `mimo-v2.5-pro` 发的是
-  [逐字节相同的文本和工具集](../../Others/MiMoCode/mimocode-mimo-v2.5-system-prompt-2026-09-04.md)：档位
+  [逐字节相同的文本和工具集](../../MiMoCode/mimocode-mimo-v2.5-system-prompt-2026-09-04.md)：档位
   换的是请求背后的模型，请求本身一点没变。而
   [Cursor 的系统提示词](../../Cursor/cursor-grok-4.5-high-system-prompt-2026-09-03.md)只有 1,955 个字
   符——它在 Cursor 服务端组装，再从*响应*里发回来，另有约 19 KB 的环境、规则、skills 和工具命名空间藏

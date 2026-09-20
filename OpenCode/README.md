@@ -22,7 +22,7 @@ dialect. GPT-5.6-Sol gets a third template entirely, with `apply_patch` in place
 `write`. The prompt and the wire format are both chosen per model, and you can diff the files here
 to see it.
 
-`nemotron-3.5-lightning-free` also appears under [Others/Hermes](../Hermes) — same model, same free
+`nemotron-3.5-lightning-free` also appears under [Hermes](../Hermes) — same model, same free
 endpoint, a different harness. That pair is the cleanest comparison in the archive.
 
 ```console

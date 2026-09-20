@@ -56,16 +56,16 @@ An honest partial beats a confident fake, and a reader who knows which is which 
 ## Naming and placement
 
 Files go under **whoever ships the prompt**, not whoever trained the model: an NVIDIA model driven
-by OpenCode is OpenCode's prompt and is filed under `Others/OpenCode/`; Meta AI's assistant is
+by OpenCode is OpenCode's prompt and is filed under `OpenCode/`; Meta AI's assistant is
 Meta's and is filed under `Meta/`.
 
 ```
-<vendor>/<product>/<harness>-<model>-<artifact>-<YYYY-MM-DD>.md
+<Product>/<harness>-<model>-<artifact>-<YYYY-MM-DD>.md
 ```
 
 - lowercase, hyphen-separated, dots kept in version numbers — `claude-code-opus-4.8-…`
-- `<harness>-` only where it disambiguates: a file in `Anthropic/Claude/` is the model's own prompt,
-  a file in `Anthropic/Claude-Code/` is the CLI's
+- `<harness>-` only where it disambiguates: a file in `Claude/` is the model's own prompt,
+  a file in `Claude-Code/` is the CLI's
 - `<artifact>` is `system-prompt`, `tools`, `skills`, `commands`, `functions`, …
 - date is the capture or extraction date, ISO, and is omitted only when it is genuinely unknown —
   do not invent one
@@ -73,8 +73,10 @@ Meta's and is filed under `Meta/`.
 - one file per capture: two captures that came out byte-identical may share one file, noted in
   `docs/CAPTURES.md`
 
-A vendor with no folder yet goes in `Others/<Product>/` — unless it is a lab already named at the
-top level, in which case add the product folder under it.
+A product with no folder yet gets one, at the top level, named after the product rather than the
+lab: `MiniMax-Code/`, not `MiniMax/Code/`. A lab that ships two products gets two folders —
+`Claude/` is the model's own prompt and `Claude-Code/` is the CLI's, and neither has to be found
+through the other.
 
 ## Before you open the pull request
 

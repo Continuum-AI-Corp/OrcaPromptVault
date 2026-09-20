@@ -41,14 +41,14 @@
 
 | المجلد | المحتوى | الملفات | منها ملتقَط |
 |---|---|---|---|
-| [OpenAI](../../OpenAI/) | [ChatGPT](../../OpenAI/ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas، و[Codex](../../OpenAI/Codex/) CLI · cloud · desktop، وChatKit Studio | 21 | 5 |
-| [Anthropic](../../Anthropic/) | [Claude](../../Anthropic/Claude/) من Sonnet 3.5 إلى Opus 5 · Fable 5.1 · Design · أنماط المستخدم، و[Claude Code](../../Anthropic/Claude-Code/) بواجهة CLI وAgent SDK | 22 | 8 |
-| [Google](../../Google/) | [Gemini](../../Google/Gemini/) 2.5 Pro · Diffusion · مساعد Gmail | 3 | — |
-| [xAI](../../xAI/) | [Grok](../../xAI/Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
+| [OpenAI](../../OpenAI/) | [ChatGPT](../../ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas، و[Codex](../../Codex/) CLI · cloud · desktop، وChatKit Studio | 21 | 5 |
+| [Anthropic](../../Anthropic/) | [Claude](../../Claude/) من Sonnet 3.5 إلى Opus 5 · Fable 5.1 · Design · أنماط المستخدم، و[Claude Code](../../Claude-Code/) بواجهة CLI وAgent SDK | 22 | 8 |
+| [Google](../../Google/) | [Gemini](../../Gemini/) 2.5 Pro · Diffusion · مساعد Gmail | 3 | — |
+| [xAI](../../xAI/) | [Grok](../../Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
 | [Cursor](../../Cursor/) | وكيل Cursor · Cursor 2.0 · Composer على Grok 4.5 | 4 | 1 |
-| [Moonshot](../../Moonshot/) | [Kimi](../../Moonshot/Kimi/) K2 · K2 Thinking | 2 | — |
-| [Alibaba](../../Alibaba/) | [Qwen Code](../../Alibaba/Qwen/) CLI | 2 | 2 |
-| [ZAI](../../ZAI/) | [ZCode](../../ZAI/GLM/): المُوجّه · المهارات · الأدوات | 3 | — |
+| [Moonshot](../../Moonshot/) | [Kimi](../../Kimi/) K2 · K2 Thinking | 2 | — |
+| [Alibaba](../../Alibaba/) | [Qwen Code](../../Qwen/) CLI | 2 | 2 |
+| [ZAI](../../ZAI/) | [ZCode](../../GLM/): المُوجّه · المهارات · الأدوات | 3 | — |
 | [DeepSeek](../../DeepSeek/) | لا شيء بعد — [مطلوب](../../CONTRIBUTING.md#wanted) | 0 | — |
 | [Meta](../../Meta/) | Meta AI على Muse Spark · Llama 4 داخل WhatsApp | 2 | — |
 | [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
@@ -97,20 +97,20 @@ node capture/capture.mjs claude --model claude-opus-5
 أربع نتائج، كلها قابلة للتحقق من ملفات هذا المستودع:
 
 - **إطار التشغيل هو المتغيّر.** نموذج واحد، `nemotron-3.5-lightning-free`، على إطارين:
-  [9,656 حرفًا و11 أداة من OpenCode](../../Others/OpenCode/opencode-nemotron-3.5-lightning-free-system-prompt-2026-09-02.md)،
-  مقابل [14,049 حرفًا و19 أداة من Hermes](../../Others/Hermes/hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md).
+  [9,656 حرفًا و11 أداة من OpenCode](../../OpenCode/opencode-nemotron-3.5-lightning-free-system-prompt-2026-09-02.md)،
+  مقابل [14,049 حرفًا و19 أداة من Hermes](../../Hermes/hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md).
   النموذج نفسه، ونقطة النهاية المجانية نفسها، وتعليمات وسطح أدوات مختلفان.
-- **والنموذج متغيّر أيضًا.** يرسل [OpenCode](../../Others/OpenCode/) ثلاثة قوالب مختلفة عبر سبعة
+- **والنموذج متغيّر أيضًا.** يرسل [OpenCode](../../OpenCode/) ثلاثة قوالب مختلفة عبر سبعة
   نماذج. خمسة نماذج مجانية تبدأ بـ *You are opencode, an interactive CLI tool*؛ ويحصل Muse Spark
   على مطلع آخر وعلى لهجة responses؛ ويحصل GPT-5.6-Sol على قالب ثالث وعلى `apply_patch` بدل `edit`
   و`write`. المُوجّه وصيغة النقل كلاهما يُختار حسب النموذج.
 - **الوضع التفاعلي ليس المُوجّه نفسه الذي يعطيه `-p`.** يرسل Claude Code على Fable 5.1 من الطرفية
-  [26,131 حرفًا و35 أداة](../../Anthropic/Claude-Code/claude-code-fable-5.1-system-prompt-2026-09-02.md)،
-  ومن سكربت [20,806 حرفًا و29 أداة](../../Anthropic/Claude-Code/claude-code-fable-5.1-print-system-prompt-2026-09-02.md)،
+  [26,131 حرفًا و35 أداة](../../Claude-Code/claude-code-fable-5.1-system-prompt-2026-09-02.md)،
+  ومن سكربت [20,806 حرفًا و29 أداة](../../Claude-Code/claude-code-fable-5.1-print-system-prompt-2026-09-02.md)،
   حتى إن سطر التعريف نفسه يتحول إلى *You are a Claude agent, built on Anthropic's Claude Agent SDK*.
   المُوجّه الذي تستعمله يوميًا وذاك الذي تحصل عليه وظيفة CI مُوجّهان مختلفان.
 - **الدرجة ليست مُوجّهًا.** يرسل MiMoCode إلى `mimo-v2.5` و`mimo-v2.5-pro`
-  [نصًا وأدوات متطابقة بايتًا ببايت](../../Others/MiMoCode/mimocode-mimo-v2.5-system-prompt-2026-09-04.md):
+  [نصًا وأدوات متطابقة بايتًا ببايت](../../MiMoCode/mimocode-mimo-v2.5-system-prompt-2026-09-04.md):
   الدرجة تغيّر النموذج خلف الطلب ولا تغيّر من الطلب شيئًا. أما
   [مُوجّه نظام Cursor](../../Cursor/cursor-grok-4.5-high-system-prompt-2026-09-03.md) فطوله 1,955
   حرفًا — يُركَّب على خوادم Cursor ويعود في *الاستجابة*، بينما يسافر نحو 19 كيلوبايت من البيئة
