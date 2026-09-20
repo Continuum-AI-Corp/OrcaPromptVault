@@ -49,9 +49,9 @@ nine tools rather than nine entries. The count in the table is the tool count.
 | MiMoCode | `mimo-v2.5-pro` | `run` | 2026-09-04 | 50,400 § | 16 § | *(same files)* | `node capture/capture.mjs mimo --model mimo-v2.5-pro` |
 | Hermes | `nemotron-3.5-lightning-free` | `-z` | 2026-09-04 | 14,049 | 19 | [prompt](../Hermes/hermes-nemotron-3.5-lightning-free-system-prompt-2026-09-04.md) · [tools](../Hermes/hermes-nemotron-3.5-lightning-free-tools.json) | `node capture/capture.mjs hermes --model nemotron-3.5-lightning-free` |
 | Kilo Code | `kilo-auto` (free) † | `run` | 2026-09-05 | 11,322 | 13 | [prompt](../Kilo-Code/kilo-auto-free-system-prompt-2026-09-05.md) | `node capture/capture.mjs kilo` |
-| MiniMax Code | `deepseek-v4-flash-free` ¶ | `exec` (`tui`) | 2026-09-20 | 14,652 | 18 | [prompt](../MiniMax-Code/minimax-code-deepseek-v4-flash-free-system-prompt-2026-09-20.md) · [tools](../MiniMax-Code/minimax-code-deepseek-v4-flash-free-tools.json) | [steps](../MiniMax-Code/README.md#regenerate) |
-| MiniMax Code | `deepseek-v4-flash-free` ¶ | `exec --prompt-mode coding` | 2026-09-20 | 16,032 | 18 | [prompt](../MiniMax-Code/minimax-code-deepseek-v4-flash-free-coding-system-prompt-2026-09-20.md) · *(same tools)* | [steps](../MiniMax-Code/README.md#regenerate) |
-| MiniMax Code | `deepseek-v4-flash-free` ¶ | `exec --prompt-mode work` | 2026-09-20 | 17,596 | 18 | [prompt](../MiniMax-Code/minimax-code-deepseek-v4-flash-free-work-system-prompt-2026-09-20.md) · *(same tools)* | [steps](../MiniMax-Code/README.md#regenerate) |
+| MiniMax Code | `deepseek-v4-flash-free` ¶ | `exec` (`tui`) | 2026-09-20 | 14,675 | 18 | [prompt](../MiniMax-Code/minimax-code-deepseek-v4-flash-free-tui-system-prompt-2026-09-20.md) · [tools](../MiniMax-Code/minimax-code-deepseek-v4-flash-free-tools.json) | `node capture/capture.mjs mcode --model deepseek/deepseek-v4-flash-free --prompt-mode tui --allow-failed` |
+| MiniMax Code | `deepseek-v4-flash-free` ¶ | `exec --prompt-mode coding` | 2026-09-20 | 16,055 | 18 | [prompt](../MiniMax-Code/minimax-code-deepseek-v4-flash-free-coding-system-prompt-2026-09-20.md) · *(same tools)* | `node capture/capture.mjs mcode --model deepseek/deepseek-v4-flash-free --prompt-mode coding --allow-failed` |
+| MiniMax Code | `deepseek-v4-flash-free` ¶ | `exec --prompt-mode work` | 2026-09-20 | 17,619 | 18 | [prompt](../MiniMax-Code/minimax-code-deepseek-v4-flash-free-work-system-prompt-2026-09-20.md) · *(same tools)* | `node capture/capture.mjs mcode --model deepseek/deepseek-v4-flash-free --prompt-mode work --allow-failed` |
 
 ## OpenCode
 
