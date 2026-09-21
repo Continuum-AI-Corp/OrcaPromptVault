@@ -1,13 +1,11 @@
-# DeepSeek
+# pi
 
 [![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../docs/CAPTURES.md)
 
-**The file here is an [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) capture**: [`dsh-deepseek-flash-system-prompt-2026-09-17.md`](dsh-deepseek-flash-system-prompt-2026-09-17.md), 4,656 characters, taken 2026-09-17.
+**The file here is an [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) capture**: [`pi-gpt-4o-mini-system-prompt-2026-09-17.md`](pi-gpt-4o-mini-system-prompt-2026-09-17.md), 2,610 characters, taken 2026-09-17.
 
-`dsh` is DeepSeek's own terminal harness, shipped as `@deepseek-ai/dsh`. This is the first
-capture in this folder.
-
-Still wanted: the DeepSeek chat app's system prompt, and the tool schemas either surface sends.
+A small prompt and a small tool set — 4 tools — from a harness that leans on the model rather
+than on scaffolding.
 
 None of these harnesses has a `capture.mjs` profile yet, so this one was taken the way the
 [capture runbook](https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/capture/CAPTURE-RUNBOOK.md)

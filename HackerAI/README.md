@@ -1,13 +1,14 @@
-# DeepSeek
+# HackerAI
 
 [![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../docs/CAPTURES.md)
 
-**The file here is an [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) capture**: [`dsh-deepseek-flash-system-prompt-2026-09-17.md`](dsh-deepseek-flash-system-prompt-2026-09-17.md), 4,656 characters, taken 2026-09-17.
+**The file here is an [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) capture**: [`hackerai-gpt-4o-mini-system-prompt-2026-09-17.md`](hackerai-gpt-4o-mini-system-prompt-2026-09-17.md), 1,689 characters, taken 2026-09-17.
 
-`dsh` is DeepSeek's own terminal harness, shipped as `@deepseek-ai/dsh`. This is the first
-capture in this folder.
+Captured through the package's own `Agent` class rather than its CLI, which has no
+non-interactive entry point. Everything in the request comes from HackerAI's code — the shim
+only calls `agent.run` and throws the answer away.
 
-Still wanted: the DeepSeek chat app's system prompt, and the tool schemas either surface sends.
+No tool schema: this turn carried none.
 
 None of these harnesses has a `capture.mjs` profile yet, so this one was taken the way the
 [capture runbook](https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/capture/CAPTURE-RUNBOOK.md)

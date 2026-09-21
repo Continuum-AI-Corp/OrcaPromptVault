@@ -20,7 +20,7 @@ Connect: [X](https://x.com/OrcaRouter) · [Discord](https://discord.com/invite/Y
 
 <br clear="left">
 
-[![Artifacts](https://img.shields.io/badge/artifacts-110-blue)](#whats-inside)
+[![Artifacts](https://img.shields.io/badge/artifacts-119-blue)](#whats-inside)
 [![Captured](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](docs/CAPTURES.md)
 [![Tool schemas](https://img.shields.io/badge/tool%20schemas-16-brightgreen)](docs/CAPTURES.md)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
@@ -41,17 +41,17 @@ behaviour stops being folklore: you can point at the line that changed.
 |---|---|---|---|
 | OpenAI | [ChatGPT](ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](Codex/) CLI · cloud · desktop, [ChatKit Studio](ChatKit-Studio/) | 21 | 5 |
 | Anthropic | [Claude](Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · user styles, [Claude Code](Claude-Code/) CLI + Agent SDK | 22 | 8 |
-| Google | [Gemini](Gemini/) 2.5 Pro · Diffusion · Gmail assistant | 3 | — |
+| Google | [Gemini](Gemini/) 2.5 Pro · Diffusion · Gmail assistant, [Gemini CLI](Gemini-CLI/) on 3.5 Flash | 4 | 1 |
 | xAI | [Grok](Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
 | Cursor | [Cursor](Cursor/) agent · 2.0 · Composer on Grok 4.5 | 4 | 1 |
 | Moonshot | [Kimi](Kimi/) K2 · K2 Thinking | 2 | — |
 | Alibaba | [Qwen Code](Qwen/) CLI | 2 | 2 |
 | ZAI | [ZCode](GLM/) prompt · skills · tools | 3 | — |
-| DeepSeek | [nothing yet](DeepSeek/) — [wanted](CONTRIBUTING.md#wanted) | 0 | — |
+| DeepSeek | [dsh](DeepSeek/) CLI | 1 | 1 |
 | Meta | [Meta AI](Meta-AI/) on Muse Spark · Llama 4 in WhatsApp | 2 | — |
-| independent | [OpenCode](OpenCode/) · [Devin](Devin/) · [Windsurf](Windsurf/) · [Cline](Cline/) · [Replit](Replit/) · [Manus](Manus/) · [v0](Vercel-v0/) · [Bolt](Bolt/) · [Lovable](Lovable/) · [Perplexity](Perplexity/) · [Mistral](Mistral/) · [MiniMax](MiniMax/) · [MiMoCode](MiMoCode/) · [Hermes](Hermes/) · [Kilo Code](Kilo-Code/) · [Dia](Dia/) · [Brave Leo](Brave-Leo/) · [Factory Droid](Factory-Droid/) · [Hume](Hume/) · [Cluely](Cluely/) · [Same.dev](Same-Dev/) · [MultiOn](MultiOn/) · [MiniMax Code](MiniMax-Code/) | 44 | 19 |
+| independent | [OpenCode](OpenCode/) · [Devin](Devin/) · [Windsurf](Windsurf/) · [Cline](Cline/) · [Replit](Replit/) · [Manus](Manus/) · [v0](Vercel-v0/) · [Bolt](Bolt/) · [Lovable](Lovable/) · [Perplexity](Perplexity/) · [Mistral](Mistral/) · [MiniMax](MiniMax/) · [MiMoCode](MiMoCode/) · [Hermes](Hermes/) · [Kilo Code](Kilo-Code/) · [Dia](Dia/) · [Brave Leo](Brave-Leo/) · [Factory Droid](Factory-Droid/) · [Hume](Hume/) · [Cluely](Cluely/) · [Same.dev](Same-Dev/) · [MultiOn](MultiOn/) · [MiniMax Code](MiniMax-Code/) · [Crush](Crush/) · [OpenClaw](OpenClaw/) · [goose](Goose/) · [Cline capture](Cline/) · [pi](Pi/) · [HackerAI](HackerAI/) · [Aider](Aider/) | 51 | 26 |
 
-Thirty-five of these files are captures taken off the wire on our own machines — twenty-three
+Forty-four of these files are captures taken off the wire on our own machines — thirty-two
 runs, listed
 with their sizes, harness versions and the command that reproduces each one in
 **[docs/CAPTURES.md](docs/CAPTURES.md)**. The other seventy-five are inherited from CL4R1T4S,
