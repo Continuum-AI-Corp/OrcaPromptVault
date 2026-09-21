@@ -40,17 +40,17 @@ GPT, Gemini, Grok, DeepSeek, Qwen까지.
 
 | 디렉터리 | 내용 | 개수 | 그중 포착 |
 |---|---|---|---|
-| [OpenAI](../../OpenAI/) | [ChatGPT](../../ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../Codex/) CLI · cloud · desktop, ChatKit Studio | 21 | 5 |
-| [Anthropic](../../Anthropic/) | [Claude](../../Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · 사용자 스타일, [Claude Code](../../Claude-Code/) CLI와 Agent SDK | 22 | 8 |
-| [Google](../../Google/) | [Gemini](../../Gemini/) 2.5 Pro · Diffusion · Gmail 어시스턴트 | 3 | — |
-| [xAI](../../xAI/) | [Grok](../../Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
+| OpenAI | [ChatGPT](../../ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../Codex/) CLI · cloud · desktop, ChatKit Studio | 21 | 5 |
+| Anthropic | [Claude](../../Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · 사용자 스타일, [Claude Code](../../Claude-Code/) CLI와 Agent SDK | 22 | 8 |
+| Google | [Gemini](../../Gemini/) 2.5 Pro · Diffusion · Gmail 어시스턴트 | 3 | — |
+| xAI | [Grok](../../Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
 | [Cursor](../../Cursor/) | Cursor agent · Cursor 2.0 · Grok 4.5 위의 Composer | 4 | 1 |
-| [Moonshot](../../Moonshot/) | [Kimi](../../Kimi/) K2 · K2 Thinking | 2 | — |
-| [Alibaba](../../Alibaba/) | [Qwen Code](../../Qwen/) CLI | 2 | 2 |
-| [ZAI](../../ZAI/) | [ZCode](../../GLM/) 프롬프트 · skills · tools | 3 | — |
+| Moonshot | [Kimi](../../Kimi/) K2 · K2 Thinking | 2 | — |
+| Alibaba | [Qwen Code](../../Qwen/) CLI | 2 | 2 |
+| ZAI | [ZCode](../../GLM/) 프롬프트 · skills · tools | 3 | — |
 | [DeepSeek](../../DeepSeek/) | 아직 없음 — [모집 중](../../CONTRIBUTING.md#wanted) | 0 | — |
-| [Meta](../../Meta/) | Meta AI(Muse Spark) · WhatsApp의 Llama 4 | 2 | — |
-| [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
+| Meta | Meta AI(Muse Spark) · WhatsApp의 Llama 4 | 2 | — |
+| Others | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
 
 이 중 31개 파일은 우리 기계에서 직접 통신을 열어 받아낸 것입니다 — 스무 번의 포착이고, 크기와 하네스
 버전, 각각을 다시 만들어 내는 명령은 **[docs/CAPTURES.md](../CAPTURES.md)**에 있습니다. 나머지 75개는

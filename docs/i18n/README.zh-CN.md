@@ -38,17 +38,17 @@ GPT、Gemini、Grok、DeepSeek、Qwen 等等。
 
 | 目录 | 收录了什么 | 文件数 | 其中抓取 |
 |---|---|---|---|
-| [OpenAI](../../OpenAI/) | [ChatGPT](../../ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas，[Codex](../../Codex/) CLI · cloud · desktop，ChatKit Studio | 21 | 5 |
-| [Anthropic](../../Anthropic/) | [Claude](../../Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · 用户风格，[Claude Code](../../Claude-Code/) CLI 与 Agent SDK | 22 | 8 |
-| [Google](../../Google/) | [Gemini](../../Gemini/) 2.5 Pro · Diffusion · Gmail 助手 | 3 | — |
-| [xAI](../../xAI/) | [Grok](../../Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
+| OpenAI | [ChatGPT](../../ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas，[Codex](../../Codex/) CLI · cloud · desktop，ChatKit Studio | 21 | 5 |
+| Anthropic | [Claude](../../Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · 用户风格，[Claude Code](../../Claude-Code/) CLI 与 Agent SDK | 22 | 8 |
+| Google | [Gemini](../../Gemini/) 2.5 Pro · Diffusion · Gmail 助手 | 3 | — |
+| xAI | [Grok](../../Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
 | [Cursor](../../Cursor/) | Cursor agent · Cursor 2.0 · Composer 跑 Grok 4.5 | 4 | 1 |
-| [Moonshot](../../Moonshot/) | [Kimi](../../Kimi/) K2 · K2 Thinking | 2 | — |
-| [Alibaba](../../Alibaba/) | [Qwen Code](../../Qwen/) CLI | 2 | 2 |
-| [ZAI](../../ZAI/) | [ZCode](../../GLM/) 提示词 · skills · tools | 3 | — |
+| Moonshot | [Kimi](../../Kimi/) K2 · K2 Thinking | 2 | — |
+| Alibaba | [Qwen Code](../../Qwen/) CLI | 2 | 2 |
+| ZAI | [ZCode](../../GLM/) 提示词 · skills · tools | 3 | — |
 | [DeepSeek](../../DeepSeek/) | 暂无——[征集中](../../CONTRIBUTING.md#wanted) | 0 | — |
-| [Meta](../../Meta/) | Meta AI（Muse Spark）· WhatsApp 里的 Llama 4 | 2 | — |
-| [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
+| Meta | Meta AI（Muse Spark）· WhatsApp 里的 Llama 4 | 2 | — |
+| Others | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
 
 其中 31 份是我们自己在本机从网络流量里抓下来的——共二十次抓取，体积、harness 版本，以及能把每一份重新
 生成出来的那条命令，都列在 **[docs/CAPTURES.md](../CAPTURES.md)**。另外 75 份原样继承自 CL4R1T4S，

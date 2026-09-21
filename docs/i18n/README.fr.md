@@ -40,17 +40,17 @@ transformer un changement de comportement en une ligne qu'on peut montrer du doi
 
 | dossier | contenu | fichiers | dont captures |
 |---|---|---|---|
-| [OpenAI](../../OpenAI/) | [ChatGPT](../../ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../Codex/) CLI · cloud · desktop, ChatKit Studio | 21 | 5 |
-| [Anthropic](../../Anthropic/) | [Claude](../../Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · styles utilisateur, [Claude Code](../../Claude-Code/) CLI et Agent SDK | 22 | 8 |
-| [Google](../../Google/) | [Gemini](../../Gemini/) 2.5 Pro · Diffusion · assistant Gmail | 3 | — |
-| [xAI](../../xAI/) | [Grok](../../Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
+| OpenAI | [ChatGPT](../../ChatGPT/) 4o · 4.1 · 4.5 · 5 · o3/o4-mini · Atlas, [Codex](../../Codex/) CLI · cloud · desktop, ChatKit Studio | 21 | 5 |
+| Anthropic | [Claude](../../Claude/) Sonnet 3.5 → Opus 5 · Fable 5.1 · Design · styles utilisateur, [Claude Code](../../Claude-Code/) CLI et Agent SDK | 22 | 8 |
+| Google | [Gemini](../../Gemini/) 2.5 Pro · Diffusion · assistant Gmail | 3 | — |
+| xAI | [Grok](../../Grok/) 3 · 4 · 4.1 · 4.20 · Code Fast 1 | 7 | — |
 | [Cursor](../../Cursor/) | agent Cursor · Cursor 2.0 · Composer sur Grok 4.5 | 4 | 1 |
-| [Moonshot](../../Moonshot/) | [Kimi](../../Kimi/) K2 · K2 Thinking | 2 | — |
-| [Alibaba](../../Alibaba/) | [Qwen Code](../../Qwen/) CLI | 2 | 2 |
-| [ZAI](../../ZAI/) | [ZCode](../../GLM/) prompt · skills · tools | 3 | — |
+| Moonshot | [Kimi](../../Kimi/) K2 · K2 Thinking | 2 | — |
+| Alibaba | [Qwen Code](../../Qwen/) CLI | 2 | 2 |
+| ZAI | [ZCode](../../GLM/) prompt · skills · tools | 3 | — |
 | [DeepSeek](../../DeepSeek/) | rien encore — [recherché](../../CONTRIBUTING.md#wanted) | 0 | — |
-| [Meta](../../Meta/) | Meta AI sur Muse Spark · Llama 4 dans WhatsApp | 2 | — |
-| [Others](../../Others/) | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
+| Meta | Meta AI sur Muse Spark · Llama 4 dans WhatsApp | 2 | — |
+| Others | OpenCode · Devin · Windsurf · Cline · Replit · Manus · v0 · Bolt · Lovable · Perplexity · Mistral · MiniMax · MiMoCode · Hermes · Kilo Code · Dia · Brave Leo · Factory Droid · Hume · Cluely · Same.dev · MultiOn | 40 | 15 |
 
 Trente et un de ces fichiers ont été pris sur le fil, sur nos propres machines — vingt captures,
 avec tailles, versions de harnais et la commande qui reproduit chacune :

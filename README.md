@@ -20,9 +20,9 @@ Connect: [X](https://x.com/OrcaRouter) · [Discord](https://discord.com/invite/Y
 
 <br clear="left">
 
-[![Artifacts](https://img.shields.io/badge/artifacts-106-blue)](#whats-inside)
+[![Artifacts](https://img.shields.io/badge/artifacts-110-blue)](#whats-inside)
 [![Captured](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](docs/CAPTURES.md)
-[![Tool schemas](https://img.shields.io/badge/tool%20schemas-15-brightgreen)](docs/CAPTURES.md)
+[![Tool schemas](https://img.shields.io/badge/tool%20schemas-16-brightgreen)](docs/CAPTURES.md)
 [![License](https://img.shields.io/badge/license-AGPL--3.0-blue)](LICENSE)
 
 ## Why this exists
