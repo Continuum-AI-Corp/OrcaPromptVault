@@ -9,9 +9,9 @@ MiniMax Code ships **three** system prompts and picks one per surface, so all th
 
 | `--prompt-mode` | file | chars |
 |---|---|--:|
-| `tui` (default) | [prompt](minimax-code-deepseek-v4-flash-free-system-prompt-2026-09-20.md) | 14,652 |
-| `coding` | [prompt](minimax-code-deepseek-v4-flash-free-coding-system-prompt-2026-09-20.md) | 16,032 |
-| `work` | [prompt](minimax-code-deepseek-v4-flash-free-work-system-prompt-2026-09-20.md) | 17,596 |
+| `tui` (default) | [prompt](minimax-code-deepseek-v4-flash-free-tui-system-prompt-2026-09-20.md) | 14,675 |
+| `coding` | [prompt](minimax-code-deepseek-v4-flash-free-coding-system-prompt-2026-09-20.md) | 16,055 |
+| `work` | [prompt](minimax-code-deepseek-v4-flash-free-work-system-prompt-2026-09-20.md) | 17,619 |
 
 They are three documents, not one with a flag in it: `coding` swaps the `Deliverable Files` section
 for `Media Output`, and `work` adds an `Artifact Completion Contract` on top of that. All three

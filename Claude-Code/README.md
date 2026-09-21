@@ -1,6 +1,6 @@
 # Claude Code
 
-[![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../../docs/CAPTURES.md)
+[![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../docs/CAPTURES.md)
 
 **Eight of the nine files here are [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)
 captures** — the prompt Claude Code actually put on the wire from a terminal on our own machine,
@@ -19,7 +19,7 @@ identity line itself changes from *You are Claude Code, Anthropic's official CLI
 first line of every file (`cc_version=…`).
 
 Reproduce any row with `node capture/capture.mjs claude --model <id>`; sizes, modes and the full
-command for each are in [docs/CAPTURES.md](../../docs/CAPTURES.md).
+command for each are in [docs/CAPTURES.md](../docs/CAPTURES.md).
 
 `claude-code-system-prompt-2025-03-04.md` is not a capture — it is inherited from CL4R1T4S, like
-everything in [docs/UPSTREAM.md](../../docs/UPSTREAM.md).
+everything in [docs/UPSTREAM.md](../docs/UPSTREAM.md).

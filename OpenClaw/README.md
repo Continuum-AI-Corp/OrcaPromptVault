@@ -1,13 +1,12 @@
-# DeepSeek
+# OpenClaw
 
 [![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../docs/CAPTURES.md)
 
-**The file here is an [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) capture**: [`dsh-deepseek-flash-system-prompt-2026-09-17.md`](dsh-deepseek-flash-system-prompt-2026-09-17.md), 4,656 characters, taken 2026-09-17.
+**The file here is an [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) capture**: [`openclaw-gpt-5.6-sol-system-prompt-2026-09-17.md`](openclaw-gpt-5.6-sol-system-prompt-2026-09-17.md), 21,630 characters, taken 2026-09-17.
 
-`dsh` is DeepSeek's own terminal harness, shipped as `@deepseek-ai/dsh`. This is the first
-capture in this folder.
-
-Still wanted: the DeepSeek chat app's system prompt, and the tool schemas either surface sends.
+**38 tools**, the largest tool surface captured here. The prompt opens with an HTML comment,
+`<!-- openclaw:attempt:STABLE -->`, rather than an identity sentence — the harness labels the
+attempt tier in the prompt itself.
 
 None of these harnesses has a `capture.mjs` profile yet, so this one was taken the way the
 [capture runbook](https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/capture/CAPTURE-RUNBOOK.md)

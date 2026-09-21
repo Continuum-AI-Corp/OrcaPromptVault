@@ -1,6 +1,6 @@
 # OpenCode
 
-[![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../../docs/CAPTURES.md)
+[![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../docs/CAPTURES.md)
 
 **Every file here is an [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay) capture** —
 one harness, seven models, captured across 2026-09-02 and 09-03.
@@ -29,4 +29,4 @@ endpoint, a different harness. That pair is the cleanest comparison in the archi
 node capture/capture.mjs opencode --model <id>
 ```
 
-Details in [docs/CAPTURES.md](../../docs/CAPTURES.md).
+Details in [docs/CAPTURES.md](../docs/CAPTURES.md).
