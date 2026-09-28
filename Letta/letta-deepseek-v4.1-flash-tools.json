@@ -1,0 +1,715 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "Bash",
+      "description": "# Bash\n\nExecutes a given bash command from the conversation's current working directory with optional timeout, ensuring proper handling and security measures.\n\nIMPORTANT: This tool is for terminal operations like git, npm, docker, etc. DO NOT use it for file operations (reading, writing, editing, searching, finding files) - use the specialized tools for this instead.\n\nBefore executing the command, please follow these steps:\n\n1. Directory Verification:\n   - If the command will create new directories or files, first use `ls` to verify the parent directory exists and is the correct location\n   - For example, before running \"mkdir foo/bar\", first use `ls foo` to check that \"foo\" exists and is the intended parent directory\n\n2. Command Execution:\n   - Always quote file paths that contain spaces with double quotes (e.g., cd \"path with spaces/file.txt\")\n   - Examples of proper quoting:\n     - cd \"/Users/name/My Documents\" (correct)\n     - cd /Users/name/My Documents (incorrect - will fail)\n     - python \"/path/with spaces/script.py\" (correct)\n     - python /path/with spaces/script.py (incorrect - will fail)\n   - After ensuring proper quoting, execute the command.\n   - Capture the output of the command.\n\nUsage notes:\n  - The command and description arguments are required.\n  - You can specify an optional timeout in milliseconds (up to 600000ms / 10 minutes). If not specified, commands will timeout after 120000ms (2 minutes).\n  - Write a clear, concise user-facing description of what this command does. This description may be shown directly in chat as part of a status row like `Running command: <description>` or `Ran command: <description>`. Describe the command's purpose, not its shell syntax. For simple commands, keep it brief (5-10 words). For complex commands (piped commands, obscure flags, or anything hard to understand at a glance), add enough context to clarify what it does.\n  - If the output exceeds 30000 characters, you receive only the first 2000 characters plus the path of a file containing the full output. A failed command whose output exceeds 10000 characters returns a head-and-tail excerpt plus that file path. Read or search that file when you need the rest instead of re-running the command.\n  - Ordinary commands wait briefly for a result, then automatically continue in the background if they are still running. You will receive a task ID and one completion notification, so do not predict command duration, set `run_in_background` merely because a command may be slow, or poll for completion.\n  - Set `run_in_background` only when you want the command to return a task ID immediately. You do not need to use '&' at the end of the command.\n  - Pick between Bash and the Monitor tool by how many notifications you need. **One** (\"tell me when the server is ready / the build finishes\") → Bash with a command that exits when the condition is true, e.g. `until grep -q \"Ready in\" dev.log; do sleep 0.5; done`. Bash automatically yields and sends one completion notification. **One per occurrence** (\"tell me every time an ERROR line appears\") → use Monitor: each stdout line is an event while you keep working.\n  \n  - Avoid using Bash with the `find`, `grep`, `cat`, `head`, `tail`, `sed`, `awk`, or `echo` commands, unless explicitly instructed or when these commands are truly necessary for the task. Instead, always prefer using the dedicated tools for these commands:\n    - File search: Use Glob (NOT find or ls)\n    - Content search: Use Grep (NOT grep or rg)\n    - Read files: Use Read (NOT cat/head/tail)\n    - Edit files: Use Edit (NOT sed/awk)\n    - Write files: Use Write (NOT echo >/cat <<EOF)\n    - Communication: Output text directly (NOT echo/printf)\n  - When issuing multiple commands:\n    - If the commands are independent and can run in parallel, make multiple Bash tool calls in a single message. For example, if you need to run \"git status\" and \"git diff\", send a single message with two Bash tool calls in parallel.\n    - If the commands depend on each other and must run sequentially, use a single Bash call with '&&' to chain them together (e.g., `git add . && git commit -m \"message\" && git push`). For instance, if one operation must complete before another starts (like mkdir before cp, Write before Bash for git operations, or git add before git commit), run these operations sequentially instead.\n    - Use ';' only when you need to run commands sequentially but don't care if earlier commands fail\n    - DO NOT use newlines to separate commands (newlines are ok in quoted strings)\n  - Each Bash call starts from the conversation's current working directory. A `cd` affects only that command and does not change the directory used by later tool calls.\n  - To change the working directory for later tool calls, use `SetWorkingDirectory`. For a one-off command in another directory, use an absolute path or a command-specific option such as `git -C /path/to/repo status`.\n\n# Committing changes with git\n\nOnly create commits when requested by the user. If unclear, ask first. When the user asks you to create a new git commit, follow these steps carefully:\n\nGit Safety Protocol:\n- NEVER update the git config\n- NEVER run destructive/irreversible git commands (like push --force, hard reset, etc) unless the user explicitly requests them \n- NEVER skip hooks (--no-verify, --no-gpg-sign, etc) unless the user explicitly requests it\n- NEVER run force push to main/master, warn the user if they request it\n- CRITICAL: Always create NEW commits rather than amending, unless the user explicitly requests a git amend. When a pre-commit hook fails, the commit did NOT happen  — so --amend would modify the PREVIOUS commit, which may result in destroying work or losing previous changes. Instead, after hook failure, fix the issue, re-stage, and create a NEW commit\n- When staging files, prefer adding specific files by name rather than using \"git add -A\" or \"git add .\", which can accidentally include sensitive files (.env, credentials) or large binaries\n- NEVER commit changes unless the user explicitly asks you to. It is VERY IMPORTANT to only commit when explicitly asked, otherwise the user will feel that you are being too proactive.\n\n1. You can call multiple tools in a single response. When multiple independent pieces of information are requested and all commands are likely to succeed, run multiple tool calls in parallel for optimal performance. run the following bash commands in parallel, each using the Bash tool:\n  - Run a git status command to see all untracked files. IMPORTANT: Never use the -uall flag as it can cause memory issues on large repos.\n  - Run a git diff command to see both staged and unstaged changes that will be committed.\n  - Run a git log command to see recent commit messages, so that you can follow this repository's commit message style.\n2. Analyze all staged changes (both previously staged and newly added) and draft a commit message:\n  - Summarize the nature of the changes (eg. new feature, enhancement to an existing feature, bug fix, refactoring, test, docs, etc.). Ensure the message accurately reflects the changes and their purpose (i.e. \"add\" means a wholly new feature, \"update\" means an enhancement to an existing feature, \"fix\" means a bug fix, etc.).\n  - Do not commit files that likely contain secrets (.env, credentials.json, etc). Warn the user if they specifically request to commit those files\n  - Draft a concise (1-2 sentences) commit message that focuses on the \"why\" rather than the \"what\"\n  - Ensure it accurately reflects the changes and their purpose\n3. You can call multiple tools in a single response. When multiple independent pieces of information are requested and all commands are likely to succeed, run multiple tool calls in parallel for optimal performance. run the following commands:\n   - Add relevant untracked files to the staging area.\n   - Create the commit with a message ending with:\n   👾 Generated with [Letta Code](https://letta.com)\n\n   Co-Authored-By: Letta Code <noreply@letta.com>\n   - Run git status after the commit completes to verify success.\n   Note: git status depends on the commit completing, so run it sequentially after the commit.\n4. If the commit fails due to pre-commit hook: fix the issue and create a NEW commit\n\nImportant notes:\n- NEVER run additional commands to read or explore code, besides git bash commands\n- NEVER use the TodoWrite or Task tools\n- DO NOT push to the remote repository unless the user explicitly asks you to do so\n- IMPORTANT: Never use git commands with the -i flag (like git rebase -i or git add -i) since they require interactive input which is not supported.\n- IMPORTANT: Do not use --no-edit with git rebase commands, as the --no-edit flag is not a valid option for git rebase.\n- If there are no changes to commit (i.e., no untracked files and no modifications), do not create an empty commit\n- In order to ensure good formatting, ALWAYS pass the commit message as a single-quoted string with embedded newlines, a la this example:\n<example>\ngit commit -m 'Commit message here.\n\n👾 Generated with [Letta Code](https://letta.com)\n\nCo-Authored-By: Letta Code <noreply@letta.com>'\n</example>\n\nUse single quotes (not double quotes) and do NOT wrap the message in `$(...)` or backticks — single-quoting preserves the message verbatim (including `$VAR`, backticks, and other special characters) without needing escapes.\n\n# Creating pull requests\nUse the gh command via the Bash tool for ALL GitHub-related tasks including working with issues, pull requests, checks, and releases. If given a Github URL use the gh command to get the information needed.\n\nIMPORTANT: When the user asks you to create a pull request, follow these steps carefully:\n\n1. You can call multiple tools in a single response. When multiple independent pieces of information are requested and all commands are likely to succeed, run multiple tool calls in parallel for optimal performance. run the following bash commands in parallel using the Bash tool, in order to understand the current state of the branch since it diverged from the main branch:\n   - Run a git status command to see all untracked files\n   - Run a git diff command to see both staged and unstaged changes that will be committed\n   - Check if the current branch tracks a remote branch and is up to date with the remote, so you know if you need to push to the remote\n   - Run a git log command and `git diff [base-branch]...HEAD` to understand the full commit history for the current branch (from the time it diverged from the base branch)\n2. Analyze all changes that will be included in the pull request, making sure to look at all relevant commits (NOT just the latest commit, but ALL commits that will be included in the pull request!!!), and draft a pull request summary\n3. You can call multiple tools in a single response. When multiple independent pieces of information are requested and all commands are likely to succeed, run multiple tool calls in parallel for optimal performance. run the following commands in parallel:\n   - Create new branch if needed\n   - Push to remote with -u flag if needed\n   - Create PR using gh pr create with the format below. Pass the body as a single-quoted string with embedded newlines (do NOT wrap it in `$(...)` or backticks).\n<example>\ngh pr create --title \"the pr title\" --body '## Summary\n<1-3 bullet points>\n\n## Test plan\n[Bulleted markdown checklist of TODOs for testing the pull request...]\n\n👾 Generated with [Letta Code](https://letta.com)'\n</example>\n\nImportant:\n- DO NOT use the TodoWrite or Task tools\n- Return the PR URL when you're done, so the user can see it\n\n# Other common operations\n- View comments on a Github PR: gh api repos/foo/bar/pulls/123/comments\n\nWindows execution:\n- Despite the tool name, on Windows this tool does not run commands through bash by default. It uses the native Windows shell launcher: PowerShell Core (`pwsh`) when available, then Windows PowerShell, then `cmd.exe` as fallback.\n- Write commands using PowerShell-compatible syntax by default. POSIX/bash constructs such as heredocs, `export VAR=...`, and Unix-style shell quoting may not work unless you explicitly invoke a POSIX shell.\n\nWindows safety rules:\n- Do not compose destructive filesystem commands across shells. Do not enumerate paths in PowerShell and then pass them to `cmd /c`, batch builtins, or another shell for deletion or moving. Use one shell end-to-end, prefer native PowerShell cmdlets such as `Remove-Item` / `Move-Item` with `-LiteralPath`, and avoid string-built shell commands for file operations.\n- Before any recursive delete or move on Windows, verify the resolved absolute target paths stay within the intended workspace or explicitly named target directory. Never issue a recursive delete or move against a computed path if the final target has not been checked.\n- When using `Start-Process` to launch a background helper or service, pass `-WindowStyle Hidden` unless the user explicitly asked for a visible interactive window. Use visible windows only for interactive tools the user needs to see or control.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "The command to execute"
+          },
+          "timeout": {
+            "type": "number",
+            "description": "Optional timeout in milliseconds (max 600000)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Clear, concise user-facing description of what this command does in active voice. This may be shown directly in chat as part of a status row like `Running command: <description>` or `Ran command: <description>`. Describe the command's purpose, not its shell syntax. Never use words like \"complex\" or \"risk\" in the description - just describe what it does.\n\nFor simple commands (git, npm, standard CLI tools), keep it brief (5-10 words):\n- ls → \"List files in current directory\"\n- git status → \"Show working tree status\"\n- npm install → \"Install package dependencies\"\n\nFor commands that are harder to parse at a glance (piped commands, obscure flags, etc.), add enough context to clarify what it does:\n- find . -name \"*.tmp\" -exec rm {} \\; → \"Find and delete all .tmp files recursively\"\n- git reset --hard origin/main → \"Discard all local changes and match remote main\"\n- curl -s url | jq '.data[]' → \"Fetch JSON from URL and extract data array elements\""
+          },
+          "run_in_background": {
+            "type": "boolean",
+            "description": "Set to true only when the command should return a task ID immediately. Ordinary commands already yield automatically if they are still running after a brief wait, and completion is delivered without polling."
+          }
+        },
+        "required": [
+          "command",
+          "description"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Monitor",
+      "description": "Start a background monitor that streams events from a long-running script. Each stdout line is an event — you keep working and notifications arrive in the chat. Events arrive on their own schedule and are not replies from the user, even if one lands while you're waiting for the user to answer a question.\n\nPick by how many notifications you need:\n- **One** (\"tell me when the server is ready / the build finishes\") → use **Bash with `run_in_background`** and a command that exits when the condition is true, e.g. `until grep -q \"Ready in\" dev.log; do sleep 0.5; done`. You get a single completion notification when it exits.\n- **One per occurrence, indefinitely** (\"tell me every time an ERROR line appears\") → Monitor with an unbounded command (`tail -f`, `inotifywait -m`, `while true`).\n- **One per occurrence, until a known end** (\"emit each CI step result, stop when the run completes\") → Monitor with a command that emits lines and then exits.\n\nYour script's stdout is the event stream. Each line becomes a notification. Exit ends the watch.\n  # Each matching log line is an event\n  tail -f /var/log/app.log | grep --line-buffered \"ERROR\"\n  # Each file change is an event\n  inotifywait -m --format '%e %f' /watched/dir\n  # Poll GitHub for new PR comments and emit one line per new comment\n  last=$(date -u +%Y-%m-%dT%H:%M:%SZ)\n    now=$(date -u +%Y-%m-%dT%H:%M:%SZ)\n    gh api \"repos/owner/repo/issues/123/comments?since=$last\" --jq '.[] | \"\\(.user.login): \\(.body)\"'\n    last=$now; sleep 30\n  # Node script that emits events as they arrive (e.g. WebSocket listener)\n  node watch-for-events.js\n  # Per-occurrence with a natural end: emit each CI check as it lands, exit when the run completes\n    s=$(gh pr checks 123 --json name,bucket)\n    cur=$(jq -r '.[] | select(.bucket!=\"pending\") | \"\\(.name): \\(.bucket)\"' <<<\"$s\" | sort)\n    comm -13 <(echo \"$prev\") <(echo \"$cur\")\n    jq -e 'all(.bucket!=\"pending\")' <<<\"$s\" >/dev/null && break\n\n**Don't use an unbounded command for a single notification.** `tail -f`, `inotifywait -m`, and `while true` never exit on their own, so the monitor stays armed until timeout even after the event has fired. For \"tell me when X is ready,\" use Bash `run_in_background` with an `until` loop instead (one notification, ends in seconds). Note that `tail -f log | grep -m 1 ...` does *not* fix this: if the log goes quiet after the match, `tail` never receives SIGPIPE and the pipeline hangs anyway.\n\n- Every pipe stage must flush per line or matches sit in its buffer unseen: `grep` needs `--line-buffered`, `awk` needs `fflush()`. `head` cannot flush at all — `| head -N` delivers nothing until N matches accumulate, then ends the stream.\n- In poll loops, handle transient failures (`curl ... || true`) — one failed request shouldn't kill the monitor.\n- Poll intervals: 30s+ for remote APIs (rate limits), 0.5–1s for local checks.\n- Write a specific `description` — it appears in every notification (\"errors in deploy.log\" not \"watching logs\").\n- Only stdout is the event stream. Stderr goes to the output file (readable via Read) but does not trigger notifications — for a command you run directly (e.g. `python train.py 2>&1 | grep --line-buffered ...`), merge stderr with `2>&1` so its failures reach your filter. (No effect on `tail -f` of an existing log — that file only contains what its writer redirected.)\n\n**Coverage — silence is not success.** When watching a job or process for an outcome, your filter must match every terminal state, not just the happy path. A monitor that greps only for the success marker stays silent through a crashloop, a hung process, or an unexpected exit — and silence looks identical to \"still running.\" Before arming, ask: *if this process crashed right now, would my filter emit anything?* If not, widen it.\n  # Wrong — silent on crash, hang, or any non-success exit\n  tail -f run.log | grep --line-buffered \"elapsed_steps=\"\n  # Right — one alternation covering progress + the failure signatures you'd act on\n  tail -f run.log | grep -E --line-buffered \"elapsed_steps=|Traceback|Error|FAILED|assert|Killed|OOM\"\n\nFor poll loops checking job state, emit on every terminal status (`succeeded|failed|cancelled|timeout`), not just success. If you cannot confidently enumerate the failure signatures, broaden the grep alternation rather than narrow it — some extra noise is better than missing a crashloop.\n\n**Output volume**: Every stdout line is a conversation message, so the filter should be selective — but selective means \"the lines you'd act on,\" not \"only good news.\" Never pipe raw logs; filter to exactly the success and failure signals you care about. Monitors that produce too many events are automatically stopped; restart with a tighter filter if this happens.\n\nStdout lines within 200ms are batched into a single notification, so multiline output from a single event groups naturally.\n\nThe script runs in the same shell environment as Bash. Exit ends the watch (exit code is reported). Timeout → killed. Set `persistent: true` for session-length watches (PR monitoring, log tails) — the monitor runs until you call TaskStop or the session ends. Use TaskStop to cancel early.\n\n**ws source** — open a WebSocket and stream each incoming text frame as an event. No shell, no polling: the server pushes, you get notified.\n    ws: {url: 'wss://events.example.com/stream', protocols: ['v1']},\n    description: 'deploy events',\n\nEach text frame becomes one notification (multiline frames stay as one event). Binary frames are reported as `[binary frame, N bytes]` rather than passed through. Socket close ends the watch with the close code surfaced; errors are surfaced before close. Same rate limiting as bash — a firehose will be suppressed and eventually stopped, so subscribe to a filtered feed where one exists.\n\nPrefer this over `command: 'websocat wss://…'` — it avoids the extra process and line-buffering pitfalls. Use bash when you need to transform or filter frames with shell tools before they become events.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "Clear, concise user-facing description of the update you are waiting for. This may be shown directly in chat, so make it grammatical by itself. Describe the expected event, not the polling command or monitor implementation. Prefer `CI results and review comments for the auth fix`, `Deployment completion or failure`, or `New errors in the API logs` over internal labels like `PR checks and state transitions`."
+          },
+          "timeout_ms": {
+            "type": "number",
+            "minimum": 1000,
+            "default": 300000,
+            "description": "Kill the monitor after this deadline. Default 300000ms, max 3600000ms. Ignored when persistent is true."
+          },
+          "persistent": {
+            "type": "boolean",
+            "default": false,
+            "description": "Run for the lifetime of the session (no timeout). Use for session-length watches like PR monitoring or log tails. Stop with TaskStop."
+          },
+          "command": {
+            "type": "string",
+            "description": "Shell command or script. Each stdout line is an event; exit ends the watch."
+          },
+          "ws": {
+            "type": "object",
+            "properties": {
+              "url": {
+                "type": "string"
+              },
+              "protocols": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[!#$%&'*+.^_`|~0-9A-Za-z-]+$"
+                }
+              }
+            },
+            "required": [
+              "url"
+            ],
+            "additionalProperties": false,
+            "description": "WebSocket to open. Each text frame is an event; binary frames are reported as a placeholder line. Socket close ends the watch. Cannot be combined with command."
+          }
+        },
+        "required": [
+          "description"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "TaskOutput",
+      "description": "# TaskOutput\n\n- Retrieves output from a running or completed task (background shell, monitor, agent, or remote session)\n- Required: `task_id` (the task to query), `block` (whether to wait for completion), `timeout` (max wait time in ms; capped at 600000)\n- Returns the task output along with status information\n- Use `block=true` to wait until the task finishes (or `timeout` elapses)\n- Use `block=false` for an immediate, non-blocking check of current status\n- Task IDs can be found using the /tasks command\n- Works with all task types: background shells, monitors, async agents, and remote sessions\n- Once a task completes you already have its output file path — it was returned when the task started, and repeated in the `<task-notification>` you receive on completion. For the full transcript at that point, prefer `Read` on that path over calling this tool again; reserve `TaskOutput` for blocking/waiting on a task that hasn't finished yet or for a quick status check.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "The task ID to get output from"
+          },
+          "block": {
+            "type": "boolean",
+            "description": "Whether to wait for completion"
+          },
+          "timeout": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 600000,
+            "description": "Max wait time in ms"
+          }
+        },
+        "required": [
+          "task_id",
+          "block",
+          "timeout"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "EnterWorktree",
+      "description": "# EnterWorktree\n\nCreate a fresh isolated git worktree for this conversation, or switch this conversation into an existing one.\n\nUse this tool when starting a new feature, bug fix, refactor, or other file-editing task where isolated branch work is useful, especially if the user or other agents may be working in the same repository. Prefer worktrees by default unless the user explicitly asks to work in the current checkout or says they do not want worktrees.\n\nPass `name` (and optionally `branch_name`/`base_ref`) to create a new worktree. Pass `path` instead to switch into an existing worktree that was created under `.letta/worktrees/` — for example to resume work or hand off to a worktree another conversation started.\n\nPrefer this tool over manually running `git worktree add` with Bash because it creates the worktree in Letta Code's canonical location, bases it on the latest default branch, and updates this conversation/session's working directory when supported.\n\nDo not use this tool for read-only tasks, code review, answering questions, continuing work already in the correct checkout, or when the user explicitly asks not to use worktrees.\n\nBehavior:\n- Uses the current cwd as the target git repository by default, or `repo_path` when provided.\n- If the current cwd is not inside a git repository, pass `repo_path` instead of falling back to manual `git worktree` commands.\n- Creates the worktree under `.letta/worktrees/` for the target repository.\n- Creates a new branch from the default base ref (with `--no-track`, so it does not adopt the base as an upstream) unless `branch_name` or `base_ref` is provided.\n- Disables repository-local and worktree-scoped git checkout filters, the `core.fsmonitor` command, and git hooks (such as `post-checkout`) while creating the worktree so commands written into the repository's `.git` directory cannot run. Creation fails when conditional includes or Git LFS transfer-program settings prevent those filters from being neutralized safely.\n- By default, switches the active conversation/session cwd to the new worktree.\n- Does not copy uncommitted changes from the current checkout.\n- Automatically provisions the new worktree so it is usable without a manual setup pass:\n  - Wires git hooks: if `core.hooksPath` is relative (e.g. husky's `.husky/_`, whose contents are gitignored and absent in a fresh worktree), it symlinks the populated hooks directory from the primary checkout so pre-commit hooks run.\n  - Copies `.letta/settings.local.json` into the worktree when present.\n  - Copies gitignored files/directories listed in a repo-root `.worktreeinclude` file (and in the `worktree.include` project setting) — use this for config like `.env`.\n- Dependencies are NOT shared by default: the worktree starts isolated, so install them with the repo's package manager if needed (modern managers like Bun/pnpm install quickly from a shared cache). Opt into sharing with `symlink_dependencies: true`, which symlinks heavy gitignored dependency directories (default: `node_modules`) from the primary checkout to avoid reinstalling — but only when the worktree will NOT change packages, because a package install into a symlinked `node_modules` writes through to the primary checkout's dependencies.\n- Provisioning is configurable project-wide via the `worktree` block in `.letta/settings.json` (`symlinkDirectories`, `copyLocalSettings`, `linkHooks`, `include`) and is best-effort: it reports what was done/skipped in the result and never aborts worktree creation.\n\nEntering an existing worktree (`path`):\n- Switches the conversation/session cwd into the worktree at `path` without creating or re-provisioning anything.\n- `path` must be a registered, non-prunable linked worktree of this repository, living under `.letta/worktrees/`. The main working tree and unmanaged worktrees are rejected.\n- Mutually exclusive with `name`, `branch_name`, and `base_ref`.\n\nCross-agent lock:\n- Switching into a worktree (whether by creating it or entering one) takes an advisory lock recording this conversation as its current owner, so two agents do not edit the same worktree concurrently.\n- Entering a worktree another active agent already holds fails with an error. If that agent is no longer active, retry with `force: true` to take over the lock. Locks left by a crashed/exited process are detected and reclaimed automatically.\n- The lock is released when this conversation switches into a different worktree, and never blocks re-entering a worktree you already hold.\n\nAfter success:\n- Continue using the returned worktree path as the current workspace.\n- Confirm you are in the new worktree with `git status` before editing.\n- Root `AGENTS.md` instructions are loaded into the successful tool result when present. Follow them before running setup, build, or validation commands; read README or other setup docs for anything they do not cover.\n- Dependencies are not shared by default. Follow the loaded project instructions for setup. If they define no setup command, use the repository's package manager. (If you created the worktree with `symlink_dependencies: true`, dependencies are already present via a symlink to the primary checkout — do NOT run an install, as it would mutate the primary checkout's `node_modules`.)",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Short human-readable name for a NEW worktree, e.g. \"fix-login-flow\" or \"desktop-cwd-isolation\". Used to derive the worktree directory and default branch name. Required unless `path` is provided."
+          },
+          "path": {
+            "type": "string",
+            "description": "Path to an EXISTING worktree under .letta/worktrees/ to switch this conversation into, instead of creating one. Mutually exclusive with `name`, `branch_name`, and `base_ref`. The path must be a registered, non-prunable linked worktree of this repository."
+          },
+          "branch_name": {
+            "type": "string",
+            "description": "Optional git branch name to create (new worktrees only). If omitted, a unique branch name like letta/<name>-<suffix> is generated."
+          },
+          "base_ref": {
+            "type": "string",
+            "description": "Optional git ref to base a new worktree on. Defaults to the latest remote default branch, usually origin/main."
+          },
+          "repo_path": {
+            "type": "string",
+            "description": "Optional path to the git repository to operate on. Use this when the current conversation cwd is not inside the target repo."
+          },
+          "refresh_base": {
+            "type": "boolean",
+            "description": "Whether to fetch the remote base branch before creating the worktree. Defaults to true. (New worktrees only.)"
+          },
+          "switch_cwd": {
+            "type": "boolean",
+            "description": "Whether to switch this conversation's working directory to the worktree after create/enter. Defaults to true."
+          },
+          "symlink_dependencies": {
+            "type": "boolean",
+            "description": "Whether to symlink heavy gitignored dependency directories (default: node_modules) from the primary checkout into the new worktree to avoid reinstalling. Defaults to FALSE so the worktree stays isolated. Only set to true when you are confident this worktree will NOT install, upgrade, or change packages, because a package install into a symlinked node_modules writes through to (and can corrupt) the primary checkout's dependencies. When false, run the repo's package manager in the worktree if you need dependencies. (New worktrees only.)"
+          },
+          "force": {
+            "type": "boolean",
+            "description": "When entering an existing worktree (`path`), take over the cross-agent lock even if another agent currently holds it. Use only when certain that agent is no longer active. Defaults to false."
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "ExitWorktree",
+      "description": "# ExitWorktree\n\nLeave the git worktree this conversation is working in and return to the primary checkout, optionally deleting the worktree and its branch.\n\nUse this tool only when the user asks to exit, leave, or go back from a worktree, or asks to clean one up when the work is done or abandoned. Do NOT call it proactively — finishing a task is not by itself a reason to leave the worktree.\n\n## Scope\n\nApplies to the worktree the conversation is currently in, when that worktree lives under `.letta/worktrees/` — the location EnterWorktree creates and enters. It does not matter whether this conversation created it.\n\nIf the current working directory is not a managed worktree, this tool is a **no-op**: it reports that there is nothing to exit and changes nothing on disk.\n\n## Parameters\n\n- `action` (required):\n  - `\"keep\"` — leave the worktree directory and branch intact. Use when the user may come back to the work, or when it holds changes worth preserving.\n  - `\"remove\"` — delete the worktree directory and its branch. Use for a clean exit when the work is merged, done, or abandoned.\n- `discard_changes` (optional, default `false`): only meaningful with `action: \"remove\"`. If the worktree has uncommitted changes or commits that are not in the base ref, removal is refused unless this is `true`. When the tool reports refused work, surface it to the user and get confirmation before re-running with `discard_changes: true`.\n\n## Behavior\n\n- Switches the conversation's working directory back to the primary checkout **before** touching the worktree, so removing it cannot strand the session (or a persistent shell) in a deleted directory.\n- Releases this conversation's cross-agent worktree lock, so another agent can take the worktree over. A lock held by a different conversation is left alone.\n- With `action: \"remove\"`, deletes the worktree and then its branch. If the branch cannot be deleted safely, the worktree removal still succeeds and the leftover branch is reported.\n- Returns to the primary checkout, not to whatever directory you happened to be in before entering — the primary checkout is the reliable destination across restarts and across worktree-to-worktree switches.\n\n## After success\n\n- Confirm the working directory with `git status` before editing further.\n- If a branch was kept behind, tell the user its name so the work is not lost.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string",
+            "enum": [
+              "keep",
+              "remove"
+            ],
+            "description": "\"keep\" leaves the worktree directory and its branch on disk; \"remove\" deletes both."
+          },
+          "discard_changes": {
+            "type": "boolean",
+            "description": "Only meaningful with `action: \"remove\"`. When the worktree has uncommitted changes or commits not in the base ref, removal is refused unless this is true. Defaults to false."
+          }
+        },
+        "required": [
+          "action"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "SetWorkingDirectory",
+      "description": "Change this conversation's working directory to an existing folder.\n\nUse this when the task moves to a different repository or directory and later relative file operations should use that location. Relative paths resolve from the current working directory. The selected directory persists for later turns in this conversation.\n\nProject instructions and skills are discovered when a turn starts, so instructions and skills from the selected directory become available on the next turn. Later tool calls in the current turn use the new directory.\n\nUse EnterWorktree instead when starting isolated feature or bug-fix work that should live in a managed git worktree.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "description": "Directory to use. Relative paths resolve from the current working directory."
+          }
+        },
+        "required": [
+          "path"
+        ],
+        "additionalProperties": false,
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Edit",
+      "description": "# Edit\n\nPerforms exact string replacements in files. \n\nUsage:\n- You must use your `Read` tool at least once in the conversation before editing. This tool will error if you attempt an edit without reading the file. Exception: memory files whose contents are already present in your system prompt do not require a Read call first. For memory files, pass an expanded absolute path (use Bash to resolve `$MEMORY_DIR` first if needed).\n- `file_path` is literal: `$VAR`, `$MEMORY_DIR`, `~`, etc. are not expanded.\n- When editing text from Read tool output, ensure you preserve the exact indentation (tabs/spaces) as it appears AFTER the line number prefix. The line number prefix format is: spaces + line number + tab. Everything after that tab is the actual file content to match. Never include any part of the line number prefix in the old_string or new_string.\n- ALWAYS prefer editing existing files in the codebase. NEVER write new files unless explicitly required.\n- Only use emojis if the user explicitly requests it. Avoid adding emojis to files unless asked.\n- The edit will FAIL if `old_string` is not unique in the file. Either provide a larger string with more surrounding context to make it unique or use `replace_all` to change every instance of `old_string`. \n- Use `replace_all` for replacing and renaming strings across the file. This parameter is useful if you want to rename a variable for instance.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "The absolute path to the file to modify"
+          },
+          "old_string": {
+            "type": "string",
+            "description": "The text to replace"
+          },
+          "new_string": {
+            "type": "string",
+            "description": "The text to replace it with (must be different from old_string)"
+          },
+          "replace_all": {
+            "type": "boolean",
+            "default": false,
+            "description": "Replace all occurrences of old_string (default false)"
+          }
+        },
+        "required": [
+          "file_path",
+          "old_string",
+          "new_string"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "TaskStop",
+      "description": "# TaskStop\n\n- Stops a running background task or monitor by its ID\n- Required: `task_id` (the task to terminate; the legacy `shell_id` alias has been removed — bash background shells share the same ID space as other tasks)\n- Returns `{ killed: boolean }` indicating whether the task was actively running and got terminated\n- Use this tool when you need to terminate a long-running task",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "description": "The ID of the background task to stop"
+          }
+        },
+        "required": [
+          "task_id"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "memory",
+      "description": "# Memory\nA convenience tool for memories stored in the memory directory (`$MEMORY_DIR`) that automatically commits changes. Local backend MemFS has no Letta remote; memory changes are committed locally.\n\nFiles stored inside of `system/` eventually become part of the agent's system prompt, so are always in the context window and do not need to be re-read. Other files only have metadata in the system prompt, so may need to be explicitly read to be updated.\n\nSupported operations on memory files:\n- `str_replace`\n- `insert`\n- `delete` (files, or directories recursively)\n- `rename` (path rename only)\n- `update_description`\n- `create`\nFor larger reorganizations, edit the projected files directly and commit the changes yourself (see the syncing instructions in your system prompt).\n\nPath formats accepted:\n- relative memory file paths (e.g. `system/contacts.md`, `reference/project/team.md`)\n- absolute paths only when they are inside `$MEMORY_DIR`\n\nNote: absolute paths outside `$MEMORY_DIR` are rejected.\n\nWhen creating or deleting files, check for `[[path]]` references in other memory files that may need to be added or updated. Keeping references consistent ensures future discoverability.\n\nExamples:\n\n```python\n# Replace text in a memory file\nmemory(command=\"str_replace\", reason=\"Update theme preference\", file_path=\"system/human/preferences.md\", old_string=\"theme: dark\", new_string=\"theme: light\")\n\n# Insert text at line 5\nmemory(command=\"insert\", reason=\"Add note about meeting\", file_path=\"reference/history/meeting-notes.md\", insert_line=5, insert_text=\"New note here\")\n\n# Delete a memory file\nmemory(command=\"delete\", reason=\"Remove stale notes\", file_path=\"reference/history/old_notes.md\")\n\n# Rename a memory file\nmemory(command=\"rename\", reason=\"Promote temp notes\", old_path=\"reference/history/temp.md\", new_path=\"reference/history/permanent.md\")\n\n# Update a block description\nmemory(command=\"update_description\", reason=\"Clarify coding prefs block\", file_path=\"system/human/prefs/coding.md\", description=\"The user's coding preferences.\")\n\n# Create a block with starting text\nmemory(command=\"create\", reason=\"Track coding preferences\", file_path=\"system/human/prefs/coding.md\", description=\"The user's coding preferences.\", file_text=\"The user seems to add type hints to all of their Python code.\")\n\n# Create an empty block\nmemory(command=\"create\", reason=\"Create coding preferences block\", file_path=\"reference/history/coding_preferences.md\", description=\"The user's coding preferences.\")\n```",
+      "parameters": {
+        "$schema": "http://json-schema.org/draft-07/schema#",
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "enum": [
+              "str_replace",
+              "insert",
+              "delete",
+              "rename",
+              "update_description",
+              "create"
+            ],
+            "description": "Memory operation to perform"
+          },
+          "reason": {
+            "type": "string",
+            "description": "Required commit message for this memory change. Used as the git commit message."
+          },
+          "file_path": {
+            "type": "string",
+            "description": "Target memory path (file or directory). Accepts relative paths like system/contacts.md or absolute paths under MEMORY_DIR"
+          },
+          "old_path": {
+            "type": "string",
+            "description": "Source memory file path for rename operations (relative path or absolute path under MEMORY_DIR)"
+          },
+          "new_path": {
+            "type": "string",
+            "description": "Destination memory file path for rename operations (relative path or absolute path under MEMORY_DIR)"
+          },
+          "old_string": {
+            "type": "string",
+            "description": "Text to replace in str_replace"
+          },
+          "new_string": {
+            "type": "string",
+            "description": "Replacement text for str_replace"
+          },
+          "insert_line": {
+            "type": "number",
+            "description": "1-indexed line number for insert"
+          },
+          "insert_text": {
+            "type": "string",
+            "description": "Text to insert"
+          },
+          "description": {
+            "type": "string",
+            "description": "Block description (required for create and update_description)"
+          },
+          "file_text": {
+            "type": "string",
+            "description": "Initial block content for create"
+          }
+        },
+        "required": [
+          "command",
+          "reason"
+        ],
+        "additionalProperties": false
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Read",
+      "description": "# Read\n\nReads a file from the local filesystem. You can access any file directly by using this tool.\nAssume this tool is able to read all files on the machine. If the User provides a path to a file assume that path is valid. It is okay to read a file that does not exist; an error will be returned.\n\nUsage:\n- The file_path parameter must be an absolute path, not a relative path\n- `file_path` is literal: `$VAR`, `$MEMORY_DIR`, `~`, etc. are not expanded.\n- By default, it reads up to 2000 lines starting from the beginning of the file\n- You can optionally specify a line offset and limit (especially handy for long files), but it's recommended to read the whole file by not providing these parameters\n- Any lines longer than 2000 characters will be truncated\n- Results are returned using cat -n format, with line numbers starting at 1\n- This tool allows Letta Code to read images (eg PNG, JPG, etc). When reading an image file the contents are presented visually as Letta Code is a multimodal LLM.\n- This tool can only read files, not directories. To read a directory, use an ls command via the Bash tool.\n- You can call multiple tools in a single response. It is always better to speculatively read multiple potentially useful files in parallel.\n- You will regularly be asked to read screenshots. If the user provides a path to a screenshot, ALWAYS use this tool to view the file at the path. This tool will work with all temporary file paths.\n- If you read a file that exists but has empty contents you will receive a system reminder warning in place of file contents.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "The absolute path to the file to read"
+          },
+          "offset": {
+            "type": "number",
+            "description": "The line number to start reading from. Only provide if the file is too large to read at once"
+          },
+          "limit": {
+            "type": "number",
+            "description": "The number of lines to read. Only provide if the file is too large to read at once."
+          }
+        },
+        "required": [
+          "file_path"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Skill",
+      "description": "# Skill\n\nExecute a skill within the main conversation\n\nWhen users ask you to perform tasks, check if any of the available skills match. Skills provide specialized capabilities and domain knowledge.\n\nWhen users reference a \"slash command\" or \"/<something>\" (e.g., \"/commit\", \"/review-pr\"), they are referring to a skill. Use this tool to invoke it.\n\nHow to invoke:\n- Use this tool with only the skill name\n- Examples:\n  - `skill: \"pdf\"` - invoke the pdf skill\n  - `skill: \"commit\"` - invoke the commit skill\n  - `skill: \"review-pr\"` - invoke the review-pr skill\n  - `skill: \"ms-office-suite:pdf\"` - invoke using fully qualified name\n\nImportant:\n- Available skills are included in your current prompt context in the conversation\n- When a skill matches the user's request, this is a BLOCKING REQUIREMENT: invoke the relevant Skill tool BEFORE generating any other response about the task\n- NEVER mention a skill without actually calling this tool\n- Do not invoke a skill that is already running\n- Do not use this tool for built-in CLI commands (like /help, /clear, etc.)\n- If you see a <command-name> tag in the current conversation turn, the skill has ALREADY been loaded - follow the instructions directly instead of calling this tool again",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "skill": {
+            "type": "string",
+            "description": "The skill name. E.g., \"commit\", \"review-pr\", or \"pdf\""
+          }
+        },
+        "required": [
+          "skill"
+        ],
+        "additionalProperties": false,
+        "$schema": "https://json-schema.org/draft/2020-12/schema"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Workflow",
+      "description": "Execute a workflow script that orchestrates multiple subagents deterministically. Use for multi-step orchestration where control flow should be deterministic (loops, conditionals, fan-out) rather than model-driven.\n\nWorkflows run in the background — this tool validates the script and returns immediately with a task ID (`workflow_N`); a <task-notification> arrives when the workflow completes, carrying the script's return value. Do not poll or sleep for it: keep working or end your turn, and never fabricate the result before the notification arrives. TaskOutput on the task ID reads the progress log and TaskStop aborts the run.\n\nONLY call this tool when the user has explicitly opted into multi-agent orchestration. Workflows can spawn dozens of subagent sessions and cost real money; the user must request that scale, not have it inferred. Explicit opt-in means: the user directly asked for a workflow or multi-agent orchestration in their own words (\"use a workflow\", \"fan out agents\", \"orchestrate this with subagents\"), asked for a comprehensive audit/sweep at a scale that plainly requires it, or invoked a skill whose instructions call this tool. For any other task — even one that would benefit from parallelism — describe what a workflow could do and ask first.\n\nEvery script must begin with `export const meta = {...}`: a PURE LITERAL (no variables, calls, or interpolation) giving the workflow's `name` (kebab-case), a one-line `description`, and optionally `phases` — one `{ title, detail? }` per phase() call. Scripts are plain JavaScript, not TypeScript. The script runs in the CLI process with the CLI's privileges and the user approves it by reading it, so keep it to orchestration (deciding what runs, combining results); reading, searching, and writing belong in subagents, where the tool allowlist applies.\n\nThe canonical multi-stage pattern — pipeline by default, each item verifies as soon as its review completes:\n\n  export const meta = {\n    name: 'review-changes',\n    description: 'Review changed files across dimensions, verify each finding',\n    phases: [{ title: 'Review' }, { title: 'Verify' }],\n  }\n  const DIMENSIONS = [{key: 'bugs', prompt: '...'}, {key: 'perf', prompt: '...'}]\n  const results = await pipeline(\n    DIMENSIONS,\n    d => agent(d.prompt, {label: `review:${d.key}`, phase: 'Review', json: true}),\n    review => review ? parallel(review.findings.map(f => () =>\n      agent(`Adversarially verify: ${f.summary}. Reply {\"real\": boolean, \"why\": string}`, {label: `verify:${f.file}`, phase: 'Verify', json: true})\n        .then(v => ({...f, verdict: v})))) : []\n  )\n  return { confirmed: results.filter(Boolean).flat().filter(Boolean).filter(f => f.verdict?.real) }\n\nScript hooks: agent(prompt, opts?) spawns one subagent and resolves to its final text — or, with opts.json, the parsed JSON value (tell the prompt what shape to return; nothing validates it) — and to null on failure (filter with .filter(Boolean)). Options: label, phase, json, model, effort, allowedTools, systemPrompt, timeoutMs, maxToolCalls. pipeline(items, ...stages) runs each item through all stages independently with NO barrier between stages; each stage receives (prevResult, originalItem, index); a throwing stage drops that item to null. parallel(thunks) runs zero-arg functions concurrently and IS a barrier — use only when a stage genuinely needs all prior results together. phase(title) groups subsequent agents in progress output (inside concurrent stages use opts.phase instead — the global phase races). log(message) emits a progress line. args is the invocation's args input, verbatim.\n\nSubagents run in isolated agent-free ephemeral conversations with read-only tools by default (Read, Grep, Glob) and no access to your memory or conversation — put ALL context they need in the prompt. Their model defaults to the invoking conversation's model; opts.model or the tool's model input accept any handle or alias from `letta model list`. They are told their final text IS the return value, so they return raw data. Concurrency is capped (excess agent() calls queue); a lifetime cap of 1000 agents per run is the runaway-loop backstop. Each subagent is also guarded: a 10-minute default timeout (override with opts.timeoutMs), at most 1000 unique tool calls by default (override with the positive safe integer opts.maxToolCalls), and a stop after three identical consecutive tool calls — a guarded call resolves to null and the journal records which guard fired.\n\nEvery run persists its script and a journal of each subagent's outcome under ~/.letta/workflows/executions/<id>/ (the paths are in the tool result). Before diagnosing an empty or unexpected result, read that run's journal.jsonl; it records each agent's actual return value. Workflow subagents require the API backend.\n\nBefore authoring a script, load the `workflow-authoring` skill — the workflow authoring reference: script API and gotchas, pipeline-vs-barrier rules, quality patterns (adversarial verify, judge panel, loop-until-dry), and worked examples.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "script": {
+            "type": "string",
+            "description": "Self-contained workflow script (plain JavaScript, not TypeScript) starting with `export const meta = {...}`."
+          },
+          "scriptPath": {
+            "type": "string",
+            "description": "Path to a workflow script file on disk. Takes precedence over `script`."
+          },
+          "args": {
+            "description": "Optional input value exposed to the script as the global `args`, verbatim. Pass arrays/objects as actual JSON values, NOT as a JSON-encoded string."
+          },
+          "maxConcurrent": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Maximum subagents running at once (default 16). Further agent() calls queue."
+          },
+          "model": {
+            "type": "string",
+            "description": "Default model handle or alias for subagents (see `letta model list`). Omit to inherit the invoking conversation's model; per-call opts.model overrides this."
+          },
+          "allowedTools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Default tool allowlist for subagents (per-call opts.allowedTools overrides). Defaults to read-only: Read, Grep, Glob. Widen deliberately for workflows that must write."
+          }
+        },
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Agent",
+      "description": "# Agent\n\nLaunch a new agent to handle complex, multi-step tasks autonomously.\n\nThe Agent tool launches specialized subagents that autonomously handle complex tasks. Each subagent type has specific capabilities and tools available to it.\n\nWhen using the Agent tool, you must specify a subagent_type parameter to select which agent type to use.\n\n## When NOT to use the Agent tool:\n\n- To send input to an agent that is already working, use SendAgentMessage when available (Cloud backend). It sends to the existing conversation without waiting for an answer or creating another local task. On the local backend, or for other ways to message an agent, load the messaging-agents skill.\n- If you want to read a specific file path, use the Read or Glob tool instead of the Agent tool, to find the match more quickly\n- If you are searching for a specific class definition like \"class Foo\", use the Glob tool instead, to find the match more quickly\n- If you are searching for code within a specific file or set of 2-3 files, use the Read tool instead of the Agent tool, to find the match more quickly\n- Other tasks that are not related to the agent descriptions above\n\n## Available Agents\n\n### fork\n- **Purpose**: Fork of the parent agent with full context and tools.\n- **Recommended model**: inherit\n\n### general-purpose\n- **Purpose**: Full-capability agent for research, planning, and implementation\n- **Recommended model**: inherit\n\n### history-analyzer\n- **Purpose**: Analyze normalized historical coding-agent trajectories (Claude Code, Codex, and any other harness supported by @letta-ai/trajectory) and directly update agent memory files with insights\n- **Recommended model**: auto\n\n### init\n- **Purpose**: Fast initialization of agent memory — reads key project files and creates a minimal memory hierarchy\n- **Recommended model**: auto-fast\n\n### memory\n- **Purpose**: Decompose and reorganize memory files into focused, single-purpose files using `/` naming\n- **Recommended model**: auto\n\n### recall\n- **Purpose**: Recall past interactions and experience\n- **Recommended model**: inherit\n\n### reflection\n- **Purpose**: Background agent that reflects on recent conversations to update memory and maintain skills\n- **Recommended model**: inherit\n\n## Usage notes:\n\n- Always include a short description (3-5 words) summarizing what the agent will do\n- Launch multiple agents concurrently whenever possible, to maximize performance; to do that, use a single message with multiple tool uses\n- When the agent is done, it will return a single message back to you. The result returned by the agent is not visible to the user. To show the user the result, you should send a text message back to the user with a concise summary of the result.\n- Agents always run in the background. The tool result will include a task ID and an output_file path, and you will be notified automatically via a <task-notification> message when it completes — no need to poll. If you need interim progress before then, use the TaskOutput tool with the task ID. You can continue working while agents run.\n- Agents can be resumed using the `conversation_id` parameter by passing the conversation ID from a previous invocation. When resumed, the agent continues with its full previous context preserved.\n- When the agent is done, it will return a single message back to you along with its conversation ID. You can use this ID to resume the agent later if needed for follow-up work.\n- Provide clear, detailed prompts so the agent can work autonomously and return exactly the information you need.\n- Agents with \"access to current context\" can see the full conversation history before the tool call. When using these agents, you can write concise prompts that reference earlier context (e.g., \"investigate the error discussed above\") instead of repeating information. The agent will receive all prior messages and understand the context.\n- The agent's outputs should generally be trusted\n- Clearly tell the agent whether you expect it to write code or just to do research (search, file reads, web fetches, etc.), since it is not aware of the user's intent\n- If the agent description mentions that it should be used proactively, then you should try your best to use it without the user having to ask for it first. Use your judgement.\n- If the user specifies that they want you to run agents \"in parallel\", you MUST send a single message with multiple Agent tool use content blocks. For example, if you need to launch multiple agents in parallel, send a single message with multiple Agent tool calls.\n\n## Deploying an Existing Agent\n\nInstead of spawning a fresh subagent from a template, you can deploy an existing agent to work in your local codebase.\n\n### Access Levels (subagent_type)\n\nWhen deploying an existing agent, only `general-purpose` is supported: full read-write access (Bash, Edit, Write, etc.) for implementation and research tasks. If `subagent_type` is not specified, it defaults to `\"general-purpose\"`.\n\n### Parameters\n\n- **agent_id**: The ID of an existing agent to deploy (e.g., \"agent-abc123\")\n  - Starts a new conversation with that agent\n  - The agent keeps its own system prompt and memory\n  - Tool access is controlled by subagent_type\n\n- **conversation_id**: Resume from an existing conversation (e.g., \"conv-xyz789\")\n  - Normal `conv-...` IDs are globally unique and do not require `agent_id`\n  - If a prior invocation returns the conversation ID `default`, pass both that invocation's `agent_id` and `conversation_id: \"default\"`; `default` is agent-scoped and cannot identify an agent by itself\n  - Continues from the conversation's existing message history\n  - Use this to continue context from:\n    - A prior Agent tool invocation that returned a conversation_id\n    - A message thread started via the messaging-agents skill\n\n### Examples\n\n```typescript\n// Deploy an existing agent\nAgent({\n  agent_id: \"agent-abc123\",\n  subagent_type: \"general-purpose\",\n  description: \"Fix auth bug\",\n  prompt: \"Fix the bug in auth.ts\"\n})\n\n// Continue an existing conversation\nAgent({\n  conversation_id: \"conv-xyz789\",\n  description: \"Continue implementation\",\n  prompt: \"Now implement the fix we discussed\"\n})\n\n// Continue an agent's default conversation\nAgent({\n  agent_id: \"agent-abc123\",\n  conversation_id: \"default\",\n  description: \"Continue implementation\",\n  prompt: \"Now implement the fix we discussed\"\n})\n```\n\n## Example usage:\n\n```typescript\n// Good - specific and actionable\nAgent({\n  subagent_type: \"general-purpose\",\n  description: \"Find authentication code\",\n  prompt: \"Search for all authentication-related code in src/. List file paths and the main auth approach used.\"\n})\n\n// Good - complex multi-step task\nAgent({\n  subagent_type: \"general-purpose\",\n  description: \"Add input validation\",\n  prompt: \"Add email and password validation to the user registration form. Check existing validation patterns first, then implement consistent validation.\"\n})\n\n// Parallel execution - launch both at once in a single message\nAgent({ subagent_type: \"general-purpose\", description: \"Find frontend components\", prompt: \"...\" })\nAgent({ subagent_type: \"general-purpose\", description: \"Find backend APIs\", prompt: \"...\" })\n\n// Bad - too simple, use Read tool instead\nAgent({\n  subagent_type: \"general-purpose\",\n  prompt: \"Read src/index.ts\"\n})\n```\n\n## Forking Parent Context\n\nUse `subagent_type: \"fork\"` to launch a subagent that inherits the parent's full conversation history. The subagent runs against a forked copy of the current conversation, so it has all accumulated context without the parent needing to serialize it into the prompt.\n\nThis is useful when:\n- The subagent needs deep context that would be expensive to re-explain in the prompt\n- You want to leverage prompt caching across multiple parallel forked subagents\n- The task requires understanding decisions and discussion from earlier in the conversation\n\n```typescript\n// Fork with full parent context\nAgent({\n  subagent_type: \"fork\",\n  description: \"Implement auth module\",\n  prompt: \"Implement the auth module we discussed. Use the patterns from the existing code.\"\n})\n\n// Parallel forks share the same cached prefix\nAgent({ subagent_type: \"fork\", description: \"Implement component A\", prompt: \"...\" })\nAgent({ subagent_type: \"fork\", description: \"Implement component B\", prompt: \"...\" })\n```\n\nNote: `fork` cannot be combined with `agent_id` or `conversation_id`.\n\n## Concurrency and Safety:\n\n- **Safe**: Multiple read-only agents (e.g. recall, history-analyzer) running in parallel\n- **Safe**: Multiple agents editing different files in parallel\n- **Risky**: Multiple agents editing the same file (conflict detection will handle it, but may lose changes)\n- **Best practice**: Partition work by file or directory boundaries for parallel execution",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string",
+            "description": "A short (3-5 word) description of the task"
+          },
+          "prompt": {
+            "type": "string",
+            "description": "The task for the agent to perform"
+          },
+          "subagent_type": {
+            "type": "string",
+            "description": "The type of specialized agent to use for this task"
+          },
+          "model": {
+            "type": "string",
+            "description": "Optional model to use for this agent. If not specified, inherits from parent. Prefer lighter models for quick, straightforward tasks to minimize cost and latency."
+          },
+          "agent_id": {
+            "type": "string",
+            "description": "Deploy an existing agent instead of creating a new one. Starts a new conversation with that agent."
+          },
+          "conversation_id": {
+            "type": "string",
+            "description": "Resume from an existing conversation. Does NOT require agent_id (conversation IDs are unique and encode the agent)."
+          }
+        },
+        "required": [
+          "description",
+          "prompt",
+          "subagent_type"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "SendAgentMessage",
+      "description": "# SendAgentMessage\n\nSend a message to another conversation without waiting for its answer. Requires\nthe Cloud backend; calls fail on the local backend (`agent-local-` IDs).\nUse this to coordinate with an agent already working, including an Agent child,\nor to contact any conversation you are authorized to access.\n\nAn agent has a persistent identity and shared memory. It can have multiple\nconversations, each with its own message history.\n\n- Supply `conversation_id` to message an existing thread, or `agent_id` alone to\n  start a new hidden thread with that agent. To use an agent's default conversation,\n  supply its `agent_id` and `conversation_id: \"default\"`.\n- Your agent and conversation IDs are attached automatically as the return address.\n  To reply, the recipient must explicitly send to that address. Ordinary assistant\n  output is not forwarded back to you.\n- A successful send means Cloud accepted the message; the recipient may not have\n  read it yet. Continue working rather than waiting for the answer.\n- Omit `computer` unless a particular computer is needed. If the conversation is\n  active on A, selecting B is rejected rather than moving the conversation.\n- If delivery cannot be confirmed, check the recipient's messages before resending\n  to avoid duplicates. The tool result includes details for inspecting the send.\n\nUse Agent to launch or resume a managed child task and receive its completion\nnotification. SendAgentMessage only sends input; it creates no local task ID and\ndoes not change the recipient's tools, model, or permissions. Load the\nmessaging-agents skill for additional CLI options and troubleshooting.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The message to send."
+          },
+          "agent_id": {
+            "type": "string",
+            "description": "The agent to start a new conversation with. An agent shares its identity and memory across conversations. Omit when targeting an existing conv-... thread; required with conversation_id: default."
+          },
+          "conversation_id": {
+            "type": "string",
+            "description": "The existing message thread to send to. Each conversation has its own message history. A conv-... ID is sufficient; to use an agent's default thread, also supply agent_id."
+          },
+          "computer": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "description": "Optional computer where the recipient should run: cloud, an online computer name, or its stable device ID. Omitted, null, and blank values use its active computer or saved destination (a computer or Cloud sandbox). An offline saved computer does not trigger a Cloud-sandbox fallback."
+          }
+        },
+        "required": [
+          "message"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "TaskCreate",
+      "description": "# TaskCreate\n\nCreate a new task in the session task list.\n\nTasks help you track progress on complex, multi-step work and show the user what you're planning to do. Each task gets a stable ID you can reference from `TaskGet`, `TaskList`, and `TaskUpdate`.\n\n## When to use this tool\n\nUse TaskCreate proactively for:\n\n1. **Complex multi-step tasks** — 3+ distinct steps or actions\n2. **Non-trivial tasks** — careful planning or multiple operations required\n3. **User provides multiple tasks** — numbered lists, comma-separated requests\n4. **New instructions arrive** — capture user requirements as tasks immediately\n5. **Starting work** — create the task, then `TaskUpdate` it to `in_progress`\n\n## When NOT to use this tool\n\n- Single, trivial task — just do it\n- Purely informational or conversational replies\n- Tasks that take fewer than 3 trivial steps\n\n## Required fields\n\n- `subject` — short imperative (e.g. \"Run tests\", \"Fix auth bug\")\n- `description` — full description with enough context to be actionable later\n\n## Optional fields\n\n- `activeForm` — present-continuous form shown during execution (e.g. \"Running tests\")\n- `metadata` — free-form `{string: string}` bag for ad-hoc annotations\n\n## Example\n\n```\nTaskCreate({\n  subject: \"Add dark mode toggle\",\n  description: \"Add a dark mode toggle to the Settings page. Wire it into the existing theme context and persist the preference to localStorage.\",\n  activeForm: \"Adding dark mode toggle\",\n  metadata: { area: \"ui\", priority: \"medium\" }\n})\n```\n\nReturns the full task record including the assigned `taskId`.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "subject": {
+            "type": "string",
+            "description": "Short imperative summary of the task (e.g. \"Run tests\", \"Fix auth bug\")."
+          },
+          "description": {
+            "type": "string",
+            "description": "Full description of what the task entails. Include enough detail to be actionable later."
+          },
+          "activeForm": {
+            "type": "string",
+            "description": "Present-continuous form shown while the task is in progress (e.g. \"Running tests\", \"Fixing auth bug\")."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Free-form string-valued metadata bag attached to the task.",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "subject",
+          "description"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "TaskGet",
+      "description": "# TaskGet\n\nFetch a single task by its `taskId`.\n\nReturns the full task record, including `subject`, `description`, `status`, `owner`, dependency edges (`blocks`, `blockedBy`), and `metadata`.\n\n## Notes\n\n- Errors if the task ID doesn't exist or was deleted.\n\n## Example\n\n```\nTaskGet({ taskId: \"task_3\" })\n```",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "taskId": {
+            "type": "string",
+            "description": "The ID of the task to fetch (e.g. \"task_1\")."
+          }
+        },
+        "required": [
+          "taskId"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "TaskList",
+      "description": "# TaskList\n\nList all tasks in the current session, in creation order.\n\nTasks removed with `status: \"deleted\"` are excluded from the output and cannot be retrieved.\n\n## When to use\n\n- Check current progress without scrolling back through the transcript\n- Verify state before committing to a sequence of `TaskUpdate` calls\n- Confirm task IDs before wiring `addBlocks` / `addBlockedBy` dependencies\n\n## Returns\n\n```\n{ \"tasks\": [TaskRecord, ...] }\n```\n\nEach `TaskRecord` includes `taskId`, `subject`, `description`, `activeForm`, `status`, `owner`, `blocks`, `blockedBy`, `metadata`, `createdAt`, `updatedAt`.",
+      "parameters": {
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "TaskUpdate",
+      "description": "Use this tool to update a task in the task list.\n\n## When to Use This Tool\n\n**Mark tasks as resolved:**\n- When you have completed the work described in a task\n- When a task is no longer needed or has been superseded\n- IMPORTANT: Always mark your assigned tasks as resolved when you finish them\n- After resolving, call TaskList to find your next task\n\n- ONLY mark a task as completed when you have FULLY accomplished it\n- If you encounter errors, blockers, or cannot finish, keep the task as in_progress\n- When blocked, create a new task describing what needs to be resolved\n- Never mark a task as completed if:\n  - Tests are failing\n  - Implementation is partial\n  - You encountered unresolved errors\n  - You couldn't find necessary files or dependencies\n\n**Delete tasks:**\n- When a task is no longer relevant or was created in error\n- Setting status to `deleted` permanently removes the task\n\n**Update task details:**\n- When requirements change or become clearer\n- When establishing dependencies between tasks\n\n## Fields You Can Update\n\n- **status**: The task status (see Status Workflow below)\n- **subject**: Change the task title (imperative form, e.g., \"Run tests\")\n- **description**: Change the task description\n- **activeForm**: Present continuous form shown in spinner when in_progress (e.g., \"Running tests\")\n- **owner**: Change the task owner (agent name)\n- **metadata**: Merge metadata keys into the task (set a key to null to delete it)\n- **addBlocks**: Mark tasks that cannot start until this one completes\n- **addBlockedBy**: Mark tasks that must complete before this one can start\n\n## Status Workflow\n\nStatus progresses: `pending` → `in_progress` → `completed`\n\nUse `deleted` to permanently remove a task.\n\n## Staleness\n\nMake sure to read a task's latest state using `TaskGet` before updating it.\n\n## Examples\n\nMark task as in progress when starting work:\n```json\n{\"taskId\": \"1\", \"status\": \"in_progress\"}\n```\n\nMark task as completed after finishing work:\n```json\n{\"taskId\": \"1\", \"status\": \"completed\"}\n```\n\nDelete a task:\n```json\n{\"taskId\": \"1\", \"status\": \"deleted\"}\n```\n\nClaim a task by setting owner:\n```json\n{\"taskId\": \"1\", \"owner\": \"my-name\"}\n```\n\nSet up task dependencies:\n```json\n{\"taskId\": \"2\", \"addBlockedBy\": [\"1\"]}\n```",
+      "parameters": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false,
+        "properties": {
+          "activeForm": {
+            "description": "Present continuous form shown in spinner when in_progress (e.g. \"Running tests\")",
+            "type": "string"
+          },
+          "addBlockedBy": {
+            "description": "Task IDs that block this task",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "addBlocks": {
+            "description": "Task IDs that this task blocks",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "description": {
+            "description": "New description for the task",
+            "type": "string"
+          },
+          "metadata": {
+            "additionalProperties": {},
+            "description": "Metadata keys to merge into the task. Set a key to null to delete it.",
+            "propertyNames": {
+              "type": "string"
+            },
+            "type": "object"
+          },
+          "owner": {
+            "description": "New owner for the task",
+            "type": "string"
+          },
+          "status": {
+            "anyOf": [
+              {
+                "enum": [
+                  "pending",
+                  "in_progress",
+                  "completed"
+                ],
+                "type": "string"
+              },
+              {
+                "const": "deleted",
+                "type": "string"
+              }
+            ],
+            "description": "New status for the task"
+          },
+          "subject": {
+            "description": "New subject for the task",
+            "type": "string"
+          },
+          "taskId": {
+            "description": "The ID of the task to update",
+            "type": "string"
+          }
+        },
+        "required": [
+          "taskId"
+        ],
+        "type": "object"
+      },
+      "strict": false
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Write",
+      "description": "# Write\n\nWrites a file to the local filesystem.\n\nUsage:\n- This tool will overwrite the existing file if there is one at the provided path.\n- If this is an existing file, you MUST use the Read tool first to read the file's contents. This tool will fail if you did not read the file first. Exception: memory files whose contents are already present in your system prompt do not require a Read call first. For memory files, pass an expanded absolute path (use Bash to resolve `$MEMORY_DIR` first if needed).\n- `file_path` is literal: `$VAR`, `$MEMORY_DIR`, `~`, etc. are not expanded.\n- ALWAYS prefer editing existing files in the codebase. NEVER write new files unless explicitly required.\n- NEVER proactively create documentation files (*.md) or README files. Only create documentation files if explicitly requested by the User.\n- Only use emojis if the user explicitly requests it. Avoid writing emojis to files unless asked.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "file_path": {
+            "type": "string",
+            "description": "The absolute path to the file to write (must be absolute, not relative)"
+          },
+          "content": {
+            "type": "string",
+            "description": "The content to write to the file"
+          }
+        },
+        "required": [
+          "file_path",
+          "content"
+        ],
+        "additionalProperties": false,
+        "$schema": "http://json-schema.org/draft-07/schema#"
+      },
+      "strict": false
+    }
+  }
+]
