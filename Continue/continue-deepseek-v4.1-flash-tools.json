@@ -1,0 +1,208 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "Read",
+      "description": "Read the contents of a file at the specified path",
+      "parameters": {
+        "type": "object",
+        "required": [
+          "filepath"
+        ],
+        "properties": {
+          "filepath": {
+            "type": "string",
+            "description": "The path to the file to read"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "List",
+      "description": "List files in a directory",
+      "parameters": {
+        "type": "object",
+        "required": [
+          "dirpath"
+        ],
+        "properties": {
+          "dirpath": {
+            "type": "string",
+            "description": "The path to the directory to list"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Bash",
+      "description": "Executes a terminal command and returns the output\n\nCommands are automatically executed from the current working directory ({{CWD}}), so there's no need to change directories with 'cd' commands.\n\nIMPORTANT: To edit files, use Edit/MultiEdit tools instead of bash commands (sed, awk, etc).\n",
+      "parameters": {
+        "type": "object",
+        "required": [
+          "command"
+        ],
+        "properties": {
+          "command": {
+            "type": "string",
+            "description": "The command to execute in the terminal."
+          },
+          "timeout": {
+            "type": "number",
+            "description": "Optional timeout in seconds (max 600). Use this parameter for commands that take longer than the default 180 second timeout."
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Fetch",
+      "description": "Fetches content from a URL, converts to markdown, and handles long content with truncation",
+      "parameters": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "The URL to fetch content from"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Checklist",
+      "description": "Create or update a task checklist. The old checklist can be seen in the chat history if it exists. Use this tool to write a new checklist or edit the existing one.",
+      "parameters": {
+        "type": "object",
+        "required": [
+          "checklist"
+        ],
+        "properties": {
+          "checklist": {
+            "type": "string",
+            "description": "The complete checklist in markdown format using - [ ] for incomplete tasks and - [x] for completed tasks. Avoid headers and additional content unless specifically being used to group checkboxes. Try to keep the list short, and make each item specific and actionable."
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "CheckBackgroundJob",
+      "description": "Check the status and output of a background job.\nReturns the current status, exit code (if finished), and all available output.\nIf the job is still running, returns partial output with \"running\" status.",
+      "parameters": {
+        "type": "object",
+        "required": [
+          "job_id"
+        ],
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "description": "The ID of the background job to check (e.g., bg-1-1234567890)"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "AskQuestion",
+      "description": "Ask the user a clarifying question to gather requirements, preferences, or implementation details before proceeding.\nGuidelines:\n- You should use this tool **whenever you want to clarify your assumption or need answers to build your plan**.\n- DO NOT supply \"other\" or \"none of the above\" or similar as an option. User can always provide a free-form answer when needed.\n",
+      "parameters": {
+        "type": "object",
+        "required": [
+          "question",
+          "options"
+        ],
+        "properties": {
+          "question": {
+            "type": "string",
+            "description": "The question to ask the user"
+          },
+          "options": {
+            "type": "array",
+            "description": "The list of choices. Leave as empty array if user should provide a free-form answer.",
+            "items": {
+              "type": "string"
+            }
+          },
+          "defaultAnswer": {
+            "type": "string",
+            "description": "Default answer if user presses Enter without providing input"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Search",
+      "description": "Search the codebase using ripgrep (rg) for a specific pattern",
+      "parameters": {
+        "type": "object",
+        "required": [
+          "pattern"
+        ],
+        "properties": {
+          "pattern": {
+            "type": "string",
+            "description": "The search pattern to look for"
+          },
+          "path": {
+            "type": "string",
+            "description": "The path to search in (defaults to current directory)"
+          },
+          "file_pattern": {
+            "type": "string",
+            "description": "Optional file pattern to filter results (e.g., '*.ts')"
+          }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Exit",
+      "description": "Exit the current process with status code 1, indicating a failure or error",
+      "parameters": {
+        "type": "object",
+        "properties": {}
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "Skills",
+      "description": "Use this tool to read the content of a skill by its name. Skills contain detailed instructions for specific tasks. The skill name should match one of the available skills listed below:\n",
+      "parameters": {
+        "type": "object",
+        "required": [
+          "skill_name"
+        ],
+        "properties": {
+          "skill_name": {
+            "type": "string",
+            "description": "The name of the skill to read. This should match the name from the available skills."
+          }
+        }
+      }
+    }
+  }
+]
