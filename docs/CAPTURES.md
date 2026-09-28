@@ -96,7 +96,7 @@ conditionals branches on a model or a provider. These three rows are also the BY
 signed-in run carries a further 3,381-character `# Memory` section that a bring-your-own-key run
 has forced off. See [MiniMax-Code/README.md](../MiniMax-Code/README.md).
 
-**✦** No `capture.mjs` profile. These nine were taken before their harness had one, by running the
+**✦** No `capture.mjs` profile. These thirteen were taken before their harness had one, by running the
 agent under `orca record` with its provider base URL moved to the proxy and reading the system
 prompt out of the request — the route the capture runbook describes. `capture.mjs <harness>`
 answers `unknown harness` for every one of them, and writing profiles is the follow-up that turns
