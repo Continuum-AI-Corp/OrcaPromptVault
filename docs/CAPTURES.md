@@ -61,6 +61,7 @@ nine tools rather than nine entries. The count in the table is the tool count.
 | pi | `gpt-4o-mini` | non-interactive | 2026-09-17 | 2,610 | 4 | [prompt](../Pi/pi-gpt-4o-mini-system-prompt-2026-09-17.md) | [runbook](https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/capture/CAPTURE-RUNBOOK.md) ✦ |
 | HackerAI | `gpt-4o-mini` | non-interactive ✧ | 2026-09-17 | 1,689 | 0 | [prompt](../HackerAI/hackerai-gpt-4o-mini-system-prompt-2026-09-17.md) | [runbook](https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/capture/CAPTURE-RUNBOOK.md) ✦ |
 | Aider | `deepseek-v4.1-flash` | non-interactive | 2026-09-18 | 1,155 | 0 | [prompt](../Aider/aider-deepseek-v4.1-flash-system-prompt-2026-09-18.md) | [runbook](https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/capture/CAPTURE-RUNBOOK.md) ✦ |
+| nanobot | `deepseek-v4.1-flash` | non-interactive | 2026-09-21 | 8,833 | 23 | [prompt](../Nanobot/nanobot-deepseek-v4.1-flash-system-prompt-2026-09-21.md) · [tools](../Nanobot/nanobot-deepseek-v4.1-flash-tools.json) | [runbook](https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/capture/CAPTURE-RUNBOOK.md) ✦ |
 | Letta | `deepseek-v4.1-flash` | non-interactive (local backend) | 2026-09-21 | 31,583 | 19 | [prompt](../Letta/letta-deepseek-v4.1-flash-system-prompt-2026-09-21.md) · [tools](../Letta/letta-deepseek-v4.1-flash-tools.json) | [runbook](https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/capture/CAPTURE-RUNBOOK.md) ✦ |
 
 ## OpenCode
