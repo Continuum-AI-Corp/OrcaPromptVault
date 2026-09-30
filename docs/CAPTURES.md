@@ -65,6 +65,7 @@ nine tools rather than nine entries. The count in the table is the tool count.
 | OpenHands | `deepseek-v4.1-flash` | non-interactive (`--headless`) | 2026-09-24 | 36,806 | 7 | [prompt](../OpenHands/openhands-deepseek-v4.1-flash-system-prompt-2026-09-24.md) · [tools](../OpenHands/openhands-deepseek-v4.1-flash-tools.json) | [runbook](https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/capture/CAPTURE-RUNBOOK.md) ✦ |
 | nanobot | `deepseek-v4.1-flash` | non-interactive | 2026-09-21 | 8,833 | 23 | [prompt](../Nanobot/nanobot-deepseek-v4.1-flash-system-prompt-2026-09-21.md) · [tools](../Nanobot/nanobot-deepseek-v4.1-flash-tools.json) | [runbook](https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/capture/CAPTURE-RUNBOOK.md) ✦ |
 | Letta | `deepseek-v4.1-flash` | non-interactive (local backend) | 2026-09-21 | 31,583 | 19 | [prompt](../Letta/letta-deepseek-v4.1-flash-system-prompt-2026-09-21.md) · [tools](../Letta/letta-deepseek-v4.1-flash-tools.json) | [runbook](https://github.com/Continuum-AI-Corp/OrcaReplay/blob/main/capture/CAPTURE-RUNBOOK.md) ✦ |
+| Muse Code | `muse-spark-1.3` | `exec` | 2026-09-29 | 24,865 | 25 ‖ | [prompt](../Muse-Code/muse-code-muse-spark-1.3-system-prompt-2026-09-29.md) · [tools](../Muse-Code/muse-code-muse-spark-1.3-tools.json) | `node capture/capture.mjs muse --model muse-spark-1.3 --allow-failed` |
 
 ## OpenCode
 
@@ -128,6 +129,11 @@ file.
 
 **§** `mimo-v2.5` and `mimo-v2.5-pro` send byte-identical prompts and tool sets, so one file serves
 both rows. The tier changes the model behind the request and nothing about the request.
+
+**‖** Muse Code declares one tool on the wire, of `type: "namespace"`, with the real twenty-five nested inside it. The column reports the twenty-five, since that is what the harness
+offers the model; the outer array has length one. Muse also sends two turns per prompt — the agent's and a judge deciding whether to load a skill — carrying the same prompt but different
+context and a different slice of those tools, twenty-five against one. This row is the agent's turn. Reaching it needs a shim in front of the proxy, because Muse fetches its model catalogue
+with a `GET` and the proxy answers 404 to every non-POST; the shim ships with the capture script, so the regenerate command is still one line. See [Muse-Code/README.md](../Muse-Code/README.md).
 
 ## What is not here
 

@@ -1,0 +1,855 @@
+[
+  {
+    "type": "function",
+    "name": "workflow",
+    "description": "Use this to orchestrate multi-agent work with a deterministic JavaScript workflow. Follow the current workflow availability context to decide whether to launch, propose, or abstain; this static tool description does not override that per-run policy. For a new run, provide an inline `script` as a JavaScript module such as `export default async function workflow(host) { return await host.agent({ input: \"review the change\" }); }`; the runtime persists it and returns an editable `scriptPath`. To repair a recoverable run, inspect or edit that file and call workflow with `scriptPath` plus the same-session `resumeFromRunId`. When both source fields are present, inline `script` is the content and `scriptPath` is its persistence target. Set unused optional fields to null or omit them; whitespace-only `scriptPath` and `resumeFromRunId` are normalized to absence (an inline `script` must be non-empty). Put repo discovery in a child agent inside the workflow script when decomposition is selected. `agentType` is optional: omit it or pass null/undefined to use the built-in `workflow-subagent` identity and current default launch; if supplied, use a #7546 canonical rendered Agent Definition id of at most 385 UTF-8 bytes (plugin-scoped ids included; its unscoped or final definition name is at most 128 UTF-8 bytes). An explicit `agentType` selects that registered Agent Definition; its prompt is appended as one developer context block, and its `tools`/`disallowedTools` may only narrow the inherited Work-tool grant. Definition-carried model and effort remain inert; per-call `model`/`effort` options or parent inheritance control execution. Prefer omitting `model` so children inherit the parent route; specify it only when a child task clearly needs a different capability or cost tier, and remember a weaker model's output flows back into the parent's synthesis. Every child inherits the parent session's current effective Work tools as its upper bound (write tools included when the session has them). Choose isolation (true or an empty object) when the user requests subagent isolation or when parallel children may write, because concurrent writers can corrupt a shared checkout even when their intended files differ. Keep read-only children in the shared checkout. An affirmative isolation request may reject when capability, provider, retained-session, workspace, or Git prerequisites are unavailable. The runtime automatically removes a clean or ignored-only isolated worktree after the child reaches its terminal and becomes quiescent. It retains a worktree with tracked changes, non-ignored untracked files, or a changed HEAD. Per-call `tools` is unsupported and must be omitted. Explicit user opt-outs always win, and genuinely atomic quick checks, one-file typo fixes, short explanations, or direct small edits stay in one turn. Size guideline: keep one workflow under 15 child agents in total unless the request itself calls for a different scale; this is a guideline, not a runtime limit. Size the fan-out to the work list actually in scope (files, claims, items), not to the wording of the request. Orchestration quality: agent and pipeline run the same kind of child (the name changes only labels), and a batch array goes only to parallel([...]) - agent and pipeline take one request object with input, agentType, schema, isolation, and label; the same fields are available on every parallel([...]) request object. agent also accepts the positional agent(\"prompt\", { agentType, schema, isolation, label }) form. parallel([...]) accepts request objects and always resolves to an array of results in input order, including a one-entry batch; a single agent or pipeline call resolves to one result object. pipeline(items, ...stages) runs each stage function as (prev, item, index) per item and drops an item to null for later stages when its stage throws. Design flow, not call names: the runner keeps at most 16 child agents active at once and queues additional calls, and one workflow may make up to 1000 total agent/pipeline/parallel item calls. Plain Promise.all over individual agent()/pipeline() calls and thunk-array parallel batches are for at most 16 pending calls; for wider same-kind work, use one parallel(items.map(...)) request array. The runner re-executes the module as child results arrive, so per-item chains can continue without waiting for every sibling; open later calls only when their inputs interpolate an earlier result's ref, summary, text, or data, or an earlier result gates whether the call runs at all. Inline schemas use the closed type, enum, required, properties, and items subset with 4 KiB, depth-16, and 16-entry bounds; any unsupported keyword or invalid shape rejects before child launch. At submission, type and enum constraints are enforced recursively. Validation permits two corrected calls in the same child run; for an inline schema, the third rejection records terminal \"schema_invalid\" internally and resolves to null at the V1 call boundary. Check result === null before reading result.error_kind or result.data. Admitted child failures remain ordinary child results with result.error_kind; they never throw, so try/catch cannot see them - branch on error_kind. Inline-schema validation exhaustion is the exception because it resolves to null rather than a child-result object. A zero-attempt capacity-one outcome resolves with result.kind === \"not_admitted\" and result.error.code; it has no ref or error_kind. A not_admitted result is truthy; never use .filter(Boolean) as an admitted-result filter. A child has no owner-side wall-clock lifetime deadline; typed provider stalls may retry under reliability policy, while token budgets and explicit cancellation remain its runtime bounds. Each non-null admitted result includes ref, summary, text (at most 32768 characters), optional model-authored result.notes, error_kind, and data. Selector failures resolve only that slot with result.error_kind set to one of \"agent_definition_not_found\", \"agent_definition_ambiguous\", \"agent_definition_invalid\", \"agent_definition_unavailable\", \"agent_definition_policy_denied\", or \"agent_definition_lookup_expectation_mismatch\"; valid siblings run and the workflow continues. End with any JSON-serializable terminal value; prefer a small object with status plus refs/summaries/text for the parent. Legacy { output_ref: result.ref } returns are still accepted. Returning undefined fails the run because it is not JSON, so when a stage finds nothing, run a fallback/synthesis child or return an explicit JSON no-findings object. host.budget reports any user-configured token ceiling and observed spend; a typical child consumes 30k-150k tokens, and a wide planning batch can exceed 800k tokens total; the model cannot set the ceiling. Child call options: agent and pipeline take one { input, agentType, schema, isolation, label } request object; every parallel([...]) request-array entry accepts the same fields. agent also accepts agent(\"prompt\", { agentType, schema, isolation, label }). When the user names a child, pass that name as label; when parallel peers need distinct identities, give each a distinct label. label is display-only and does not change the child type, prompt, tools, or execution identity. pipeline(items, ...stages) advances each item to its next stage independently as its prior result arrives. For non-trivial Workflow authoring, call `read_skill` exactly once per parent session for `workflow-authoring` when available; after it succeeds, reuse that result and do not reload the skill after validation errors or for later Workflow calls, retries, or resumes.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Required short human-readable name, such as Summarize library functions. When neither script nor scriptPath is given, name launches a saved workflow from the local registry (project .agents/.codex/.claude workflows directories or the user config workflows directory); an unknown name fails with the available names. When script or scriptPath is present, name is display-only: it labels the run and does not select a saved workflow."
+        },
+        "script": {
+          "type": "string",
+          "description": "JavaScript workflow source for release V8 host API v1. Two accepted shapes: (1) a CC-shaped top-level-await script body with no default export that calls the bare globals directly, e.g. const result = await agent(\"review the change\"); return { status: \"ok\", ref: result.ref, text: result.text }; (2) a legacy module export default async function workflow(host) { ... } using host.agent, host.pipeline, host.parallel - the same functions as the bare globals agent, pipeline, parallel. args exposes the caller arguments (any JSON value, deeply frozen); budget is a frozen per-slice snapshot with total, used, spent(), remaining(), localConcurrencyCap, totalAgentCallCap, reinstalled with observed usage as child results arrive. agent and pipeline accept one { input, agentType, schema, isolation, label } request object; parallel request-array entries use the same fields. agent also accepts the positional agent(\"prompt\", { agentType, schema: { required: [...] }, isolation, label }) form. When the user names a child, pass that name as label; give parallel peers distinct labels. label is display-only and does not change the child type, prompt, tools, or execution identity. agentType is optional: omit it or pass null/undefined to use the built-in workflow-subagent identity and current default launch; if supplied, use a #7546 canonical rendered Agent Definition id of at most 385 UTF-8 bytes (plugin-scoped ids included; its unscoped or final definition name is at most 128 UTF-8 bytes). An explicit agentType selects that registered Agent Definition; its prompt is appended as one developer context block, and its tools/disallowedTools may only narrow the inherited Work-tool grant. Definition-carried model and effort remain inert; per-call `model`/`effort` options or parent inheritance control execution. isolation accepts true, a case-insensitive \"true\" string, or a non-array, non-function object to request an isolated worktree; false, a case-insensitive \"false\" string, null, undefined, or omission uses the parent workspace, and every other shape rejects. Choose isolation (true or an empty object) when the user requests subagent isolation or when parallel children may write, because concurrent writers can corrupt a shared checkout even when their intended files differ. Keep read-only children in the shared checkout. An affirmative isolation request may reject when capability, provider, retained-session, workspace, or Git prerequisites are unavailable. Every child inherits the parent session's current effective Work tools as its upper bound (write tools included when the session has them). Per-call tools is unsupported and must be omitted. An optional phase: \"Title\" (up to 128 chars) on agent/pipeline/parallel calls and parallel array items explicitly assigns that agent to a progress group - use it inside pipeline()/parallel() stages to avoid races on the global phase() state; same phase string, same group box. Each result includes ref, summary, text (at most 32768 characters), optional model-authored notes, error_kind, and data; ref remains the durable full-result handle. For up to 16 independent mixed host calls, start them together with Promise.all([host.agent({ input: \"...\" }), host.pipeline({ input: \"...\" })]). For wider same-kind work, use one parallel request array: const reports = await host.parallel(items.slice(0, 900).map((item) => ({ input: `Review ${item}` }))); array input always resolves to an array of results in input order, one-entry batches included. Zero-argument thunk arrays such as parallel([() => agent(\"...\"), () => agent(\"...\")]) are also limited to the 16 pending-call slice cap; use request arrays for larger batches. pipeline(items, ...stages) runs stage functions (prev, item, index) per item and advances each item to its next stage independently as its prior result arrives, dropping an item to null for later stages when its stage throws. Do not join, concatenate, array, or map() several child refs/texts into a fake output_ref. For multiple child results, call a synthesis host.agent child and return a small JSON object with synthesis.ref and synthesis.text; legacy { output_ref: synthesis.ref } returns are still accepted. When a later synthesis child needs earlier child outputs, include those refs in the later input, e.g. const synthesis = await host.agent({ input: `Synthesize reports: ${reports.map((report) => report.ref).join(\"\\n\")}` }); return { status: \"ok\", ref: synthesis.ref, text: synthesis.text }. For one child, use const result = await host.agent({ input: \"...\" }); return { status: \"ok\", ref: result.ref, text: result.text }. Put repo discovery in child agent input when target files or git diff are unclear. For repository research, ask the child to use its inherited Work tools to inspect the source and test bodies needed for its assigned claims; omit bash workdir unless you already observed an existing directory. phase(\"title\") (up to 128 chars) and log(\"message\") (up to 512 chars) record progress markers: they return undefined immediately, never barrier the script, cost no batches or agent calls, and are capped at 512 per run."
+        },
+        "scriptPath": {
+          "type": "string",
+          "description": "Local JavaScript workflow path. For a fresh inline run, omit `scriptPath`; the runtime persists `script` and returns the persisted path as `scriptPath`. When non-empty `script` is present, `scriptPath` is only an explicit persistence target; whether relative or absolute, its existing parent directory must resolve inside the active workspace. Only for a path-only read with no `script` may an absolute local `scriptPath` be used without workspace context; relative path-only sources resolve against the active workspace. Use the returned `scriptPath` with `resumeFromRunId` after inspecting or editing a recoverable workflow."
+        },
+        "resumeFromRunId": {
+          "type": "string",
+          "description": "Same-session logical workflow run id to resume after its previous owner task has stopped. Internal opaque control handle for Workflow calls only. Pass this exact value only as resumeFromRunId; never repeat it in user-facing prose. Re-executes the selected script from the top and reuses only the longest unchanged completed call prefix."
+        },
+        "expectedScriptHash": {
+          "type": "string",
+          "description": "Optional canonical `sha256:<64 lowercase hex>` hash of the intended script bytes (the same form the result echoes as `scriptHash`). When present, the launch is rejected before any child work unless the selected source bytes hash to it — use this when the script bytes come from a checked-in file whose digest a deterministic step already computed, so a retyped or corrupted inline copy cannot launch. Whitespace-only normalizes to absence; any other non-canonical shape rejects as invalid input."
+        },
+        "args": {
+          "type": [
+            "array",
+            "boolean",
+            "null",
+            "number",
+            "object",
+            "string"
+          ],
+          "description": "Workflow arguments exposed to the script as args; accepts any JSON value. Pass the value itself (e.g. {\"topic\": \"x\"}), not a JSON-encoded string: a string arrives in the script as a string."
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional CC-compatible display metadata. Accepted but not executed."
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional CC-compatible display metadata. Accepted but not executed."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "read_file",
+    "description": "Read a line-numbered UTF-8 text file window, or attach a supported image or MP4/MOV video file as model-visible output.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path of ONE regular file to read. Never a directory — a directory path fails with 'not a regular file'; list directories with the muse.powershell tool instead. Relative paths resolve from the Active Workspace Root. Shell `cd`/`workdir` affects only that shell call and does not change this root. Absolute paths may be used only when the current filesystem policy allows them."
+        },
+        "offset": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "1-based line number where the text read window starts. Ignored for image and video files. Defaults to 1."
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2000,
+          "description": "Maximum number of text lines to return. Ignored for image and video files. Defaults to 500."
+        }
+      },
+      "required": [
+        "path"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "search",
+    "description": "Search files with native ripgrep semantics. Results are confined by the current filesystem policy and emitted through tool output. Prefer this tool over shelling out to `rg`, `find`, or `grep -r` via powershell: it is policy-confined, output-bounded, and watchdog-bounded, so it cannot fan out into runaway background processes over a large tree.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "pattern": {
+          "type": "string",
+          "description": "Regex or literal pattern to search for in file contents. File and directory names are never matched; to find files by name, use `glob` (a sibling parameter)."
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "regex",
+            "literal"
+          ],
+          "description": "Interpret pattern as a regex or as literal text. Defaults to literal."
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Files or directories to search. Omit paths to search the root. Relative paths resolve from the Active Workspace Root. Shell `cd`/`workdir` affects only that shell call and does not change this root. Absolute paths may be used only when the current filesystem policy allows them."
+        },
+        "glob": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Ripgrep-style include or exclude globs. Prefix a glob with ! to exclude it. To locate files by name, pass `**/<name>` here with `output_mode:\"files_with_matches\"` and a broad content pattern like regex `^`."
+        },
+        "case_sensitive": {
+          "type": "boolean",
+          "description": "Force case-sensitive or case-insensitive matching."
+        },
+        "smart_case": {
+          "type": "boolean",
+          "description": "Use smart-case matching when case_sensitive is not set."
+        },
+        "word": {
+          "type": "boolean",
+          "description": "Only report matches surrounded by word boundaries."
+        },
+        "whole_line": {
+          "type": "boolean",
+          "description": "Only report matches that span an entire line."
+        },
+        "context_before": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of context lines to include before each match."
+        },
+        "context_after": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of context lines to include after each match."
+        },
+        "max_matches": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum matches to return before stopping early. Runtime caps still apply."
+        },
+        "hidden": {
+          "type": "boolean",
+          "description": "Include hidden files and directories."
+        },
+        "no_ignore": {
+          "type": "boolean",
+          "description": "Disable ignore-file filtering while preserving runtime work limits."
+        },
+        "follow_symlinks": {
+          "type": "boolean",
+          "description": "Follow symlinks whose canonical target is admitted by the current filesystem policy."
+        },
+        "binary": {
+          "type": "string",
+          "enum": [
+            "skip",
+            "text"
+          ],
+          "description": "Skip binary files or search them as text. Defaults to skip."
+        },
+        "output_mode": {
+          "type": "string",
+          "enum": [
+            "text",
+            "json",
+            "files_with_matches",
+            "content"
+          ],
+          "description": "Accepted values: `text` (rg-like matching lines; default), `json` (JSON lines), `files_with_matches` (only file paths), or `content` (alias of `text`). Invalid-UTF-8 JSON rows use base64 `bytes`, not `text`."
+        }
+      },
+      "required": [
+        "pattern"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "write_file",
+    "description": "Create or overwrite a complete UTF-8 file admitted by the current filesystem policy. For a LARGE file, write a small first chunk here and then grow it with muse.edit_file — one huge write can exceed a single model response and fail to send.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path to create or overwrite. Relative paths resolve from the Active Workspace Root. Shell `cd`/`workdir` affects only that shell call and does not change this root. Absolute paths may be used only when the current filesystem policy allows them."
+        },
+        "content": {
+          "type": "string",
+          "description": "Complete UTF-8 file content to write. Keep it modest; for a large file write a first chunk and append the rest with muse.edit_file, since one very large content value can fail to send."
+        }
+      },
+      "required": [
+        "path",
+        "content"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "edit_file",
+    "description": "Replace one unique exact text match in a file admitted by the current filesystem policy. Also use this to GROW a large file in steps: match its current last line(s) and replace them with those line(s) plus more, so you never send one huge muse.write_file that can fail.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Path to edit. Relative paths resolve from the Active Workspace Root. Shell `cd`/`workdir` affects only that shell call and does not change this root. Absolute paths may be used only when the current filesystem policy allows them."
+        },
+        "find": {
+          "type": "string",
+          "description": "Exact text to replace."
+        },
+        "replace": {
+          "type": "string",
+          "description": "Replacement text."
+        }
+      },
+      "required": [
+        "path",
+        "find",
+        "replace"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "read_memory",
+    "description": "Read a bounded line window from one local Markdown memory file. Use this when you need live memory content; reads never write to memory.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": [
+            "personal",
+            "personal_project",
+            "project"
+          ],
+          "description": "Memory scope. Defaults to personal_project."
+        },
+        "path": {
+          "type": "string",
+          "description": "Relative Markdown path under the selected memory scope root."
+        },
+        "offset": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "1-based line number where the read window starts. Defaults to 1."
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 2000,
+          "description": "Maximum number of lines to return. Defaults to 500."
+        }
+      },
+      "required": [
+        "path"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "add_memory",
+    "description": "Add Markdown content to local memory: creates the file when it is missing, appends to the end when it already exists, and does not overwrite existing content. Use muse.edit_memory for exact replacements.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": [
+            "personal",
+            "personal_project",
+            "project"
+          ],
+          "description": "Memory scope. Defaults to personal_project."
+        },
+        "path": {
+          "type": "string",
+          "description": "Relative Markdown path under the selected memory scope root."
+        },
+        "content": {
+          "type": "string",
+          "description": "Markdown content to append. Existing file content is preserved."
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "user",
+            "feedback",
+            "project",
+            "reference"
+          ],
+          "description": "Optional memory note type for future recall."
+        },
+        "description": {
+          "type": "string",
+          "description": "Optional short summary for future recall."
+        }
+      },
+      "required": [
+        "path",
+        "content"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "edit_memory",
+    "description": "Replace one exact string in local Markdown memory. The edit fails unless old_str appears exactly once; use muse.add_memory to append new content.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "scope": {
+          "type": "string",
+          "enum": [
+            "personal",
+            "personal_project",
+            "project"
+          ],
+          "description": "Memory scope. Defaults to personal_project."
+        },
+        "path": {
+          "type": "string",
+          "description": "Relative Markdown path under the selected memory scope root."
+        },
+        "old_str": {
+          "type": "string",
+          "description": "Exact text to replace. Must match exactly once."
+        },
+        "new_str": {
+          "type": "string",
+          "description": "Replacement text. May be empty."
+        }
+      },
+      "required": [
+        "path",
+        "old_str",
+        "new_str"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "work_stop",
+    "description": "Stop one runtime-owned work item by canonical Work ID, such as a launched workflow run or other long-running background work.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "work_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "work_id"
+      ],
+      "additionalProperties": false
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "work_list",
+    "description": "List current background work in this session, including Monitor, Bash, Workflow and native subagents. Use this to recover a lost canonical work_id for muse.work_stop. Returns up to 100 items; pass next_after_work_id as after_work_id for the next page. stop_requested means a stop request is in progress, not that the work has terminated.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "after_work_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  {
+    "type": "function",
+    "name": "web_search",
+    "description": "Search the web and return a short list of source results with title, URL, and snippet.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string",
+          "description": "Search query."
+        }
+      },
+      "required": [
+        "query"
+      ],
+      "additionalProperties": false
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "powershell",
+    "description": "Run a Windows PowerShell command. By default commands are executed by powershell.exe, so use PowerShell syntax and environment variables such as `$env:NAME`, not Bash or cmd.exe syntax. By default the runtime waits at most 10 seconds in the foreground; for a slow build or test, pass a larger yield_time_ms (up to 300000) to wait for it to finish in this one call. Commands still running after the wait remain managed by the runtime and return an internal session_id handle for muse.powershell_input; final output arrives later as runtime context. A command you background yourself runs outside the runtime's managed lifecycle; let the runtime manage a long command through yield_time_ms instead. The UI already shows running background status. Do not narrate backgrounding, session ids, current output, or wake/delivery mechanics: do not tell the user a command moved to the background, do not quote session ids, and do not mention delivery mechanics unless they explicitly ask. If there is no substantive next work after a command backgrounds, end the turn without extra status text. Use muse.powershell_input only to send input to or terminate that live session, not to poll a backgrounded command for completion — the final output is delivered automatically. Exception: when a runtime overdue notice names a still-running session, you may inspect it or terminate it with muse.powershell_input now. Never point a recursive content scan (`Get-ChildItem -Recurse`, broad `Select-String` pipelines) at the workspace root or an unverified-size tree — use muse.search (bounded) or scope the scan to the subtree the task names. A scan that backgrounds is yours: harvest its result or terminate it via muse.powershell_input before ending the turn; never re-issue a broader variant while an earlier run is pending — a pending scan is not a negative result.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "type": "string",
+          "description": "Windows PowerShell command to execute; do not use Bash or cmd.exe syntax."
+        },
+        "workdir": {
+          "type": "string",
+          "description": "Optional working directory for the command; it must already exist when you call the tool (a command cannot create its own workdir — use `cd` inside the command instead). Omit it to run in the workspace root. Registered sandbox mode is Managed: use only observed, existing Windows paths inside the workspace; `/workspace` is a compatibility alias only. A live permission-profile change can alter the final effective sandbox mode for an invocation; that final mode is authoritative."
+        },
+        "shell": {
+          "type": "string",
+          "description": "Optional PowerShell-compatible executable override. Omit it to use Windows PowerShell."
+        },
+        "login": {
+          "type": "boolean",
+          "description": "Accepted for compatibility and ignored by Windows PowerShell."
+        },
+        "tty": {
+          "type": "boolean",
+          "description": "Set tty=true for interactive PowerShell commands and for every session that will receive future input through powershell_input."
+        },
+        "yield_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Milliseconds to wait before returning output. Defaults to 10000ms, capped at 300000ms; set this high (e.g. 120000) to wait for a slow build/test in one call. Still-running commands return an internal session_id handle."
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Optional hard kill deadline in milliseconds: when it expires the process is killed and reported as timed_out. This is not how long to wait for output — use yield_time_ms for that; a command still running after the yield keeps running in the background. Usually omit it."
+        },
+        "max_output_tokens": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum visible output budget."
+        },
+        "description": {
+          "type": "string",
+          "description": "3–8 words; one line; sentence case; begin with a base-form action verb; avoid lifecycle or outcome words; no final period; match the conversation language"
+        },
+        "sandbox_permissions": {
+          "type": "string",
+          "enum": [
+            "use_default",
+            "require_escalated"
+          ],
+          "description": "Per-command sandbox override. Defaults to use_default. If a PowerShell command is blocked by the managed sandbox, retry it with require_escalated to request one-time human approval to run that command unsandboxed."
+        }
+      },
+      "required": [
+        "command",
+        "description"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "powershell_input",
+    "description": "Send input to, resize, or terminate a running PowerShell PTY session using the internal session_id handle returned by muse.powershell — use it when a live interactive process needs input. Do not use it to poll a backgrounded command for completion: the final result is delivered automatically as runtime context, even after the turn ends. Each response returns only output not returned by an earlier response for that session; empty output with terminal status means all bytes were already delivered, while original_output_bytes remains cumulative. Exception: when a runtime overdue notice names a still-running session, you may inspect it or terminate it with muse.powershell_input now. Do not narrate backgrounding, session ids, or delivery mechanics to the user unless asked.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "session_id": {
+          "type": "integer",
+          "description": "Internal PowerShell session ID returned by muse.powershell; use it for input, resize, or terminate calls, not as user-facing status."
+        },
+        "chars": {
+          "type": "string",
+          "description": "Characters to write. Empty or omitted means poll only; do not use empty polls to wait for a backgrounded command to finish. Exception: an empty poll of a session named by a runtime overdue notice is allowed."
+        },
+        "terminate": {
+          "type": "boolean",
+          "description": "Terminate the live session instead of writing input."
+        },
+        "yield_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Milliseconds to wait before returning output. Defaults to 250ms when chars are sent (capped at 30000ms) and 5000ms for an empty poll (capped at 300000ms); ignored when terminate is set — a terminate call waits until the session ends."
+        },
+        "max_output_tokens": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Maximum visible output budget."
+        },
+        "resize_rows": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32767,
+          "description": "Rows for a Windows elevated TTY resize request. Must be sent with resize_cols and without chars."
+        },
+        "resize_cols": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32767,
+          "description": "Columns for a Windows elevated TTY resize request. Must be sent with resize_rows and without chars."
+        }
+      },
+      "required": [
+        "session_id"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "monitor",
+    "description": "Monitor is for repeated events from one long-running source, never for a single completion: for one-shot work such as \"tell me when the build is done\", run the command once with muse.powershell and report. Sources: a shell command (each stdout line is an event; exit ends the watch) or a WebSocket. Compose the one command that emits every signal you care about, failure as well as success, and never watch raw output: filter it to sparse state lines (e.g. `./job.sh 2>&1 | grep -E --line-buffered 'DONE|FAIL'`). Run the job inside the Monitor command itself, or watch one that is already running; do not start it separately with bash. After start, keep working; events arrive automatically as machine notifications, not user replies. Stop with work_stop. Timed ceiling: 30 minutes; persistent runs until work_stop or session end.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "type": "string",
+          "description": "Required. Short label for what this monitor watches."
+        },
+        "command": {
+          "type": "string",
+          "description": "Shell source (exactly one of command or ws). Each stdout line is an event; exit ends the watch."
+        },
+        "ws": {
+          "type": "string",
+          "description": "WebSocket source (exactly one of command or ws). ws:// or wss:// only; each UTF-8 text frame is an event, close ends the watch."
+        },
+        "ws_subprotocols": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Optional, ws only. RFC 6455 subprotocol tokens: each valid, no duplicates."
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 1800000,
+          "default": 300000,
+          "description": "Timed watches only. Kill after this deadline. Rejected with persistent."
+        },
+        "persistent": {
+          "type": "boolean",
+          "default": false,
+          "description": "No Monitor deadline until the source ends, work_stop, or session end."
+        },
+        "wake_delay_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1800000,
+          "default": 120000,
+          "description": "How long ordinary output may batch before waking an idle run. 0 = immediate; otherwise at least 1000."
+        },
+        "show_lines": {
+          "type": "boolean",
+          "default": false,
+          "description": "FEED: each line gets its own transcript cell. Set for a chat/connector listener, not a build log."
+        }
+      },
+      "required": [
+        "description"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "cron_create",
+    "description": "Schedule a prompt to run later — once, or on a repeating 5-field local-time cron. Recurring jobs auto-expire after 7 days unless permanent is true. Returns a job id you can pass to muse.cron_delete.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cron": {
+          "type": "string",
+          "description": "5-field cron in local time: \"M H DoM Mon DoW\". Avoid :00/:30 for approximate times."
+        },
+        "prompt": {
+          "type": "string",
+          "description": "The prompt to run at each fire."
+        },
+        "recurring": {
+          "type": "boolean",
+          "description": "true (default) repeats until deleted/expired; false fires once then deletes."
+        },
+        "fire_when_active_run": {
+          "type": "boolean",
+          "description": "true (default) fires even while a run is active; false skips every scheduled fire that lands during an active run."
+        },
+        "fire_immediately": {
+          "type": "boolean",
+          "description": "false (default) waits for the first cron slot; true requires recurring=true and returns an instruction to run the prompt now in this same turn while the stored job starts at the next cron slot."
+        },
+        "permanent": {
+          "type": "boolean",
+          "description": "false (default) recurring jobs auto-expire after 7 days; true stores a permanent recurring job with no expiry, running until deleted. No effect on one-shot jobs."
+        }
+      },
+      "required": [
+        "cron",
+        "prompt"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "cron_delete",
+    "description": "Cancel a scheduled job by its id (from muse.cron_create/muse.cron_list).",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Job id to cancel."
+        }
+      },
+      "required": [
+        "id"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "cron_list",
+    "description": "List all scheduled jobs for this session, with their cadence and next fire time.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "get_goal",
+    "description": "Read the active session goal and progress. Returns {\"goal\": null} when no goal is set. Do not call to orient yourself, to check whether a goal exists, or on a greeting — only call when you are already working on an explicit goal and need its current state.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {}
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "create_goal",
+    "description": "Start a session goal only when requested. Fails if this session already has an unfinished goal; the failure message names the way out.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "objective": {
+          "type": "string",
+          "description": "The concrete goal to keep working toward."
+        },
+        "token_budget": {
+          "type": "integer",
+          "description": "Optional positive token budget for this goal."
+        }
+      },
+      "required": [
+        "objective"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "update_goal",
+    "description": "Mark the active goal complete or blocked. Use complete only when no required work remains.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "complete",
+            "blocked"
+          ],
+          "description": "The terminal goal status to set."
+        }
+      },
+      "required": [
+        "status"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "report_progress",
+    "description": "Report active goal progress. percent_complete=100 is equivalent to muse.update_goal(status=\"complete\").",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "current_work": {
+          "type": "string",
+          "description": "What you are doing now."
+        },
+        "next_work": {
+          "type": "string",
+          "description": "What you will do next."
+        },
+        "percent_complete": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Approximate completion percentage from 0 to 100."
+        }
+      },
+      "required": [
+        "current_work",
+        "next_work",
+        "percent_complete"
+      ]
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "read_skill",
+    "description": "Read one available SKILL.md body as a tool result.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Skill name, id, or display path from the skills catalog."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "additionalProperties": false
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "work_status",
+    "description": "Read the current state of one Work item by its canonical Work ID. This is a bounded, read-only lookup; use returned artifact references only when more detail is needed.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "work_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "work_id"
+      ],
+      "additionalProperties": false
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "snooze_reminder",
+    "description": "Temporarily suppress matching async reminder notifications.",
+    "parameters": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reminder_kind",
+        "duration_steps"
+      ],
+      "properties": {
+        "reminder_kind": {
+          "type": "string",
+          "description": "The kind attribute from the <system-reminder> notification to suppress (e.g. 'skill', 'memory'). This is NOT the agent id."
+        },
+        "subject_key": {
+          "type": "string",
+          "description": "Optional narrower subject key to suppress."
+        },
+        "duration_steps": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32,
+          "description": "Number of model request steps to suppress matching reminders."
+        }
+      }
+    },
+    "strict": false
+  },
+  {
+    "type": "function",
+    "name": "write_todos",
+    "description": "Records the task's todo plan, which the user sees as live progress. Call it at the start of any task with three or more distinct steps, then update it as each step finishes. Always send the full list; keep exactly one item in_progress. Skip it for trivial single-step tasks.",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "todos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "text": {
+                "type": "string",
+                "description": "Todo item text."
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "pending",
+                  "in_progress",
+                  "completed",
+                  "cancelled"
+                ]
+              }
+            },
+            "required": [
+              "text",
+              "status"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "required": [
+        "todos"
+      ],
+      "additionalProperties": false
+    },
+    "strict": false
+  }
+]
