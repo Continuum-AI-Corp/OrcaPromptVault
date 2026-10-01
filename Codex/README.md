@@ -2,7 +2,7 @@
 
 [![captured with OrcaReplay](https://img.shields.io/badge/captured%20with-OrcaReplay-black)](../docs/CAPTURES.md)
 
-**Five of the eleven files here are [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)
+**Nine of the fifteen files here are [OrcaReplay](https://github.com/Continuum-AI-Corp/OrcaReplay)
 captures**, taken from `codex exec` on our own machine.
 
 | model | mode | chars | tools | files |
@@ -10,6 +10,9 @@ captures**, taken from `codex exec` on our own machine.
 | `gpt-5.6-sol` | `codex exec` | 23,354 | 9 | [prompt](codex-cli-gpt-5.6-sol-system-prompt-2026-09-03.md) · [tools](codex-cli-gpt-5.6-sol-tools.json) |
 | `gpt-5.6-luna` | `codex exec` | 20,815 | 3 | [prompt](codex-cli-gpt-5.6-luna-system-prompt-2026-09-02.md) · [tools](codex-cli-gpt-5.6-luna-tools.json) |
 | `gpt-6-astra` | `codex exec` | 21,261 | — | [prompt](codex-cli-gpt-6-astra-system-prompt-2026-09-05.md) |
+| `gpt-6-luna` | `codex exec` | 23,981 | 11 | [prompt](codex-cli-gpt-6-luna-system-prompt-2026-10-01.md) · [tools](codex-cli-gpt-6-tools.json) |
+| `gpt-6-sol` | `codex exec` | 24,936 | 11 | [prompt](codex-cli-gpt-6-sol-system-prompt-2026-10-01.md) · [tools](codex-cli-gpt-6-tools.json) |
+| `gpt-6.1-sol` | `codex exec` | 27,712 | 11 | [prompt](codex-cli-gpt-6.1-sol-system-prompt-2026-10-01.md) · [tools](codex-cli-gpt-6-tools.json) |
 
 Reproduce with `node capture/capture.mjs codex --model <id>` — details in
 [docs/CAPTURES.md](../docs/CAPTURES.md).
