@@ -35,9 +35,15 @@ git repository loses the whole `gitStatus` block, about 4 KB on a measured run.
 | `gpt-5.6-luna` | `codex exec` | 2026-09-02 | 20,815 | 3 | [prompt](../Codex/codex-cli-gpt-5.6-luna-system-prompt-2026-09-02.md) · [tools](../Codex/codex-cli-gpt-5.6-luna-tools.json) | `node capture/capture.mjs codex --model gpt-5.6-luna` |
 | `gpt-5.6-sol` | `codex exec` | 2026-09-03 | 23,354 | 9 | [prompt](../Codex/codex-cli-gpt-5.6-sol-system-prompt-2026-09-03.md) · [tools](../Codex/codex-cli-gpt-5.6-sol-tools.json) | `node capture/capture.mjs codex --model gpt-5.6-sol` |
 | `gpt-6-astra` † | `codex exec` | 2026-09-05 | 21,261 | — | [prompt](../Codex/codex-cli-gpt-6-astra-system-prompt-2026-09-05.md) | `node capture/capture.mjs codex --model gpt-6-astra` |
+| `gpt-6-luna` | `codex exec` | 2026-10-01 | 23,981 | 11 | [prompt](../Codex/codex-cli-gpt-6-luna-system-prompt-2026-10-01.md) · [tools](../Codex/codex-cli-gpt-6-tools.json) | `node capture/capture.mjs codex --model gpt-6-luna` |
+| `gpt-6-sol` | `codex exec` | 2026-10-01 | 24,936 | 11 | [prompt](../Codex/codex-cli-gpt-6-sol-system-prompt-2026-10-01.md) · [tools](../Codex/codex-cli-gpt-6-tools.json) | `node capture/capture.mjs codex --model gpt-6-sol` |
+| `gpt-6.1-sol` | `codex exec` | 2026-10-01 | 27,712 | 11 | [prompt](../Codex/codex-cli-gpt-6.1-sol-system-prompt-2026-10-01.md) · [tools](../Codex/codex-cli-gpt-6-tools.json) | `node capture/capture.mjs codex --model gpt-6.1-sol` |
 
 Codex groups its tools into namespaced containers, so the JSON is an array of two entries holding
-nine tools rather than nine entries. The count in the table is the tool count.
+nine tools rather than nine entries. The count in the table is the tool count. The three GPT-6 rows
+share one file: their tool JSON came out byte-identical, three namespaces holding eleven — `functions`
+gained `request_user_input_async` and a new `clock` namespace holds `sleep`, with nothing dropped since
+`gpt-5.6-sol`.
 
 ## Other coding harnesses
 
